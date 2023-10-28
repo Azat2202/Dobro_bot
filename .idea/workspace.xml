@@ -5,26 +5,28 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c433b44e-5a9d-42f8-ae05-0047862e0fa6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/7bc8963c-28b3-4029-a462-dc4b73724de0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/dataSources/7bc8963c-28b3-4029-a462-dc4b73724de0/storage_v2/_src_/schema/main.uQUzAA.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/anek.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/horo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/inlineKeyboards.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/karma.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/mark_all.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/marriage.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/regular_message.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/single_commands.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/top.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/commands/truth_or_dare.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/configuration.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/database/exceptions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utility.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/database/DatabseManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/database/DatabseManager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/wishes.py" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/loader.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/anek.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/anek.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/horo.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/horo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/inlineKeyboards.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/inlineKeyboards.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/karma.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/karma.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/mark_all.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/mark_all.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/marriage.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/marriage.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/regular_message.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/regular_message.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/single_commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/single_commands.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/top.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/top.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commands/truth_or_dare.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/truth_or_dare.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/DatabseManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/DatabseManager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/database/exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/get_users.py" beforeDir="false" afterPath="$PROJECT_DIR$/get_users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utility.py" beforeDir="false" afterPath="$PROJECT_DIR$/utility.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,35 +83,14 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\azat2\PycharmProjects\dobro_bot" />
       <recent name="C:\Users\azat2\PycharmProjects\dobro_bot\src\1" />
       <recent name="C:\Users\azat2\PycharmProjects\dobro_bot\src" />
       <recent name="C:\Users\azat2\PycharmProjects\dobro_bot\src\commands" />
       <recent name="C:\Users\azat2\PycharmProjects\dobro_bot\resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.main">
-    <configuration name="main (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="dobro_bot" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="dobro_bot" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -128,7 +109,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="src/main.py" />
+      <option name="SCRIPT_NAME" value="main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -137,15 +118,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <list>
-      <item itemvalue="Python.main" />
-      <item itemvalue="Python.main (1)" />
-    </list>
-    <recent_temporary>
-      <list>
-        <item itemvalue="Python.main (1)" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -155,7 +127,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1698500768777</updated>
-      <workItem from="1698500769793" duration="15000000" />
+      <workItem from="1698500769793" duration="18130000" />
     </task>
     <servers />
   </component>
@@ -163,7 +135,7 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/dobro_bot$main.coverage" NAME="main Coverage Results" MODIFIED="1698516142483" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/dobro_bot$main.coverage" NAME="main Coverage Results" MODIFIED="1698522588479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/dobro_bot$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1698516127725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
   </component>
 </project>
