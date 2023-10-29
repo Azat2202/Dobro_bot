@@ -4,7 +4,7 @@ from . import inlineKeyboards
 from . import karma
 from . import mark_all
 from . import marriage
-from . import single_commands
+from . import singleword_commands
 from . import top
 from . import truth_or_dare
 from . import regular_message

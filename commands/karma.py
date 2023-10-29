@@ -23,7 +23,7 @@ async def plus_karma(message: types.Message):
 
 @dp.message_handler(filters.Text(equals='минус', ignore_case=True))
 @dp.message_handler(filters.Text(equals='токс', ignore_case=True))
-async def plus_karma(message: types.Message):
+async def minus_karma(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
         if message.reply_to_message:

@@ -5,3 +5,5 @@ beautifulsoup4~=4.10.0
 lxml~=4.9.3
 apscheduler
 python-dotenv
+transformers
+torch
