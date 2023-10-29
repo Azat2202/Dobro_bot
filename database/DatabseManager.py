@@ -34,10 +34,11 @@ class DatabaseManager:
         return is_first_married or is_second_married
 
     def inc_message(self, user_id: int, chat_id: int, first_name: str, last_name: str):
-        self.__add_new_user(user_id, first_name, last_name)
+        self.__add_new_user(chat_id, user_id, first_name, last_name)
         self.cursor.execute("UPDATE messages "
                             "SET message_count = message_count + 1 "
                             "WHERE user_id = (?) AND chat_id = (?)", (user_id, chat_id))
+        self.__add_new_user(chat_id, user_id, first_name, last_name)
         self.connection.commit()
 
     def inc_karma(self, user_id: int, chat_id: int):
@@ -58,17 +59,21 @@ class DatabaseManager:
         return self.cursor.execute("SELECT users.name, users.surname, messages.message_count "
                                    "FROM messages "
                                    "JOIN users "
-                                   "ON messages.user_id = users.id "
-                                   "WHERE chat_id = (?) "
+                                   "ON messages.user_id = users.id AND messages.chat_id = users.chat_id "
+                                   "WHERE messages.chat_id = (?) "
                                    "ORDER BY message_count DESC; ",
                                    (chat_id,)).fetchall()
+
+    def get_users(self, chat_id):
+        return self.cursor.execute("""
+        SELECT id, name, surname FROM users WHERE chat_id = (?)""", (chat_id, )).fetchall()
 
     def karma_repr(self, chat_id: int):
         return self.cursor.execute("SELECT users.name, users.surname, messages.karma "
                                    "FROM messages "
                                    "JOIN users "
-                                   "ON messages.user_id = users.id "
-                                   "WHERE chat_id = (?) "
+                                   "ON messages.user_id = users.id AND messages.chat_id = users.chat_id "
+                                   "WHERE messages.chat_id = (?) "
                                    "ORDER BY karma DESC; ",
                                    (chat_id,)).fetchall()
 
@@ -85,8 +90,8 @@ class DatabaseManager:
                              datetime.now().strftime("%y-%m-%d %H:%M:%S"),
                              chat_id,
                              message_id))
-        self.__add_new_user(user1_id, user1_name, user1_surname)
-        self.__add_new_user(user2_id, user2_name, user2_surname)
+        self.__add_new_user(chat_id, user1_id, user1_name, user1_surname)
+        self.__add_new_user(chat_id, user2_id, user2_name, user2_surname)
         self.connection.commit()
 
     def marriage_agree(self, user_id: int, chat_id: int, message_id: int):
@@ -155,18 +160,23 @@ class DatabaseManager:
                 self.cursor.execute(f"UPDATE marriages SET betrothed = 1 WHERE chat_id = (?) and "
                                     f"message_id = (?)",
                                     (chat_id, message_id))
+                self.connection.commit()
             return data[8], True, data[0], self.__get_name(data[0]), data[1], self.__get_name(data[1])
 
     def marriages_repr(self, chat_id: int):
         return self.cursor.execute("""
-        SELECT user_1.id, user_1.name, user_1.surname, user_2.id, user_2.name, user_2.surname, marriages.date
+        SELECT user_1.id, user_1.name, user_2.id, user_2.name, witness_1.name, witness_2.name, marriages.date
         FROM marriages
         JOIN users AS user_1
-              ON marriages.user1 = user_1.id
+              ON marriages.user1 = user_1.id AND marriages.chat_id = user_1.chat_id
         JOIN users AS user_2
-              ON marriages.user2 = user_2.id
+              ON marriages.user2 = user_2.id AND marriages.chat_id = user_2.chat_id
+        JOIN users AS witness_1
+              ON marriages.witness1 = witness_1.id AND marriages.chat_id = witness_1.chat_id
+        JOIN users AS witness_2
+              ON marriages.witness2 = witness_2.id AND marriages.chat_id = witness_2.chat_id
         WHERE betrothed = 1
-          AND chat_id = (?)
+          AND marriages.chat_id = (?)
         ORDER BY date;""", (chat_id,)).fetchall()
 
     def request_divorce(self, user_id: int, chat_id: int):
@@ -180,6 +190,7 @@ class DatabaseManager:
     def del_marriage(self, chat_id: int, user_id: int):
         self.cursor.execute("DELETE FROM marriages WHERE chat_id = (?) AND (user1 = (?) OR user2 = (?))",
                             (chat_id, user_id, user_id))
+        self.connection.commit()
 
     def __get_name(self, user_id: int):
         data = self.cursor.execute("SELECT * FROM users WHERE id = (?)", (user_id,)).fetchone()
@@ -188,8 +199,9 @@ class DatabaseManager:
         else:
             return ''
 
-    def __add_new_user(self, user_id: int, name: str, surname: str):
-        self.cursor.execute(f"INSERT OR IGNORE INTO users VALUES (?, ?, ?)", (user_id, name, surname))
+    def __add_new_user(self, chat_id: int, user_id: int, name: str, surname: str):
+        name = name.replace("[", "{").replace("]", "}")
+        self.cursor.execute(f"INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?)", (user_id, name, surname, chat_id))
         self.connection.commit()
 
     def close(self):

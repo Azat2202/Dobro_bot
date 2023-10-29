@@ -446,8 +446,8 @@
     </routine>
     <schema id="177" parent="1" name="main">
       <Current>1</Current>
-      <IntrospectionTimestamp>2023-10-28.17:14:17.770</IntrospectionTimestamp>
-      <LocalIntrospectionTimestamp>2023-10-28.14:14:17</LocalIntrospectionTimestamp>
+      <IntrospectionTimestamp>2023-10-28.23:40:13.857</IntrospectionTimestamp>
+      <LocalIntrospectionTimestamp>2023-10-28.20:40:13</LocalIntrospectionTimestamp>
     </schema>
     <argument id="178" parent="16">
       <ArgumentDirection>R</ArgumentDirection>
@@ -1568,8 +1568,13 @@
       <DasType>TEXT|0s</DasType>
       <Position>3</Position>
     </column>
-    <index id="543" parent="521" name="unique_user">
-      <ColNames>id</ColNames>
+    <column id="543" parent="521" name="chat_id">
+      <DasType>INT|0s</DasType>
+      <Position>4</Position>
+    </column>
+    <index id="544" parent="521" name="unique_user">
+      <ColNames>id
+chat_id</ColNames>
       <Unique>1</Unique>
     </index>
   </database-model>

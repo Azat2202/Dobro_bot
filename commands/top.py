@@ -39,8 +39,8 @@ async def spamers_repr(message: types.Message):
 async def spamers_repr(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
+        data = db_worker.karma_repr(message.chat.id)
     out = 'Топ кармы: \n'
-    data = db_worker.karma_repr(message.chat.id)
     num = 1
     for user in data:
         karma = int(user[2])

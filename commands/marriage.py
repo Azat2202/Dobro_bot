@@ -52,11 +52,11 @@ async def marriages_repr(message: types.Message):
         out = 'Статистика по бракам:\n'
         num = 0
         for line in data:
-            user1, user1_name, user1_surname, user2, user2_name, user2_surname,marriage_date = line
+            user1, user1_name, user2, user2_name, witness1_name, witness2_name, marriage_date = line
             num += 1
             time_obj = datetime.now() - datetime.strptime(marriage_date, "%y-%m-%d %H:%M:%S")
-            out += f'{num}. [{format_name(user1_name, user1_surname)}](tg://user?id={user1}) и [{format_name(user2_name, user2_surname)}](tg://user?id={user2}) - {beautiful_time_repr(time_obj)}\n'
-            # out += f'   Свидетели: {self.__get_name(line[3])} и {self.__get_name(line[4])}\n'
+            out += f'{num}. {user1_name} и {user2_name} - {beautiful_time_repr(time_obj)}\n'
+            out += f'        └Свидетели: {witness1_name} и {witness2_name}\n'
         out += f'\nВсего {num} браков'
         if num == 0:
             out = 'В этой группе еще нет ни одного брака!'
