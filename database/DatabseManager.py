@@ -56,6 +56,25 @@ class DatabaseManager:
                             (user_id, chat_id))
         self.connection.commit()
 
+    def add_sex(self, user1: int, user2: int, chat_id: int):
+        self.cursor.execute("INSERT INTO sex (chat_id, user1, user2)"
+                            "VALUES (?, ?, ?);",
+                            (chat_id, user1, user2))
+        self.connection.commit()
+
+    def sex_count(self, chat_id: int, user1: int):
+        every = self.cursor.execute("SELECT COUNT(*) "
+                                   "FROM sex "
+                                   "WHERE (user1 = ? OR user2 = ?) AND chat_id = ?;",
+                            (user1, user1, chat_id)).fetchone()[0]
+        unique = self.cursor.execute("SELECT COUNT(*) "
+                                    "FROM( "
+                                    "SELECT DISTINCT user1, user2 "
+                                    "FROM sex "
+                                    "WHERE (user1 = ? OR user2 = ?) AND chat_id = ?);",
+                                     (user1, user1, chat_id)).fetchone()[0]
+        return every, unique
+
     def get_messages(self, chat_id: int):
         return self.cursor.execute("SELECT users.name, users.surname, messages.message_count "
                                    "FROM messages "
