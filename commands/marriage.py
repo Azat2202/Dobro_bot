@@ -26,7 +26,7 @@ async def new_marriage(message: types.Message):
                 return
             sent_msg = await message.reply(
                 emoji.emojize(f'[{format_name(message.from_user.first_name, message.from_user.last_name)}](tg://user?id={message.reply_to_message.from_user.id}), вы '
-                              f'согласны заключить брак с [{format_name(message.from_user.first_name, message.from_user.last_name)}](tg://user?id={message.from_user.id})?\n '
+                              f'согласны заключить брак с [{format_name(message.reply_to_message.from_user.first_name, message.reply_to_message.from_user.last_name)}](tg://user?id={message.reply_to_message.from_user.id})?\n '
                               f'Для заключения брака так же необходимы два свидетеля\n'
                               f'Согласие: :cross_mark:\n'
                               f'Первый свидетель: :cross_mark:\n'
@@ -71,7 +71,7 @@ async def divorce(message: types.Message):
         try:
             db_worker.request_divorce(message.from_user.id, message.chat.id)
             inline_divorce_agreement = InlineKeyboardButton('Да', callback_data=f'divorce {message.chat.id} {message.from_user.id}')
-            inline_divorce_refusal = InlineKeyboardButton('Отмена', callback_data=f'not_divorce {message.from_user.id}')
+            inline_divorce_refusal = InlineKeyboardButton('Отмена', callback_data=f'not_divorce {message.chat.id} {message.from_user.id}')
             inline_divorce_kb = InlineKeyboardMarkup().add(inline_divorce_agreement, inline_divorce_refusal)
             await message.reply('Вы уверены что собираетесь развестись?', reply_markup=inline_divorce_kb)
         except WrongUserException:
@@ -82,8 +82,8 @@ async def divorce(message: types.Message):
 @dp.callback_query_handler(lambda c: c.data[:7] == 'divorce')
 async def agreed(call: types.CallbackQuery):
     with DatabaseManager() as db_worker:
-        chat_id, user_id = call.data.split()
-        if call.from_user.id != user_id:
+        s, chat_id, user_id = call.data.split()
+        if call.from_user.id != int(user_id):
             await call.answer('Вы не можете подтвердить развод')
             return
         db_worker.del_marriage(chat_id, user_id)
@@ -92,8 +92,8 @@ async def agreed(call: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda c: c.data[:11] == 'not_divorce')
 async def agreed(call: types.CallbackQuery):
-    chat_id, user_id = call.data.split()
-    if user_id != call.from_user.id:
+    s, chat_id, user_id = call.data.split()
+    if int(user_id) != call.from_user.id:
         await call.answer('Вы не можете отменить развод!')
         return
     await call.message.edit_text("Развод отменен")

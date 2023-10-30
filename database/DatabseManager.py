@@ -108,14 +108,14 @@ class DatabaseManager:
             raise TimeLimitException
 
         self.cursor.execute("UPDATE marriages "
-                            "SET betrothed = 1"
+                            "SET betrothed = 1 "
                             "WHERE chat_id = (?) "
                             "AND message_id = (?) "
-                            "AND witness_1 IS NOT NULL "
-                            "AND witness_2 IS NOT NULL",
+                            "AND witness1 IS NOT NULL "
+                            "AND witness2 IS NOT NULL",
                             (chat_id, message_id))
         self.cursor.execute("UPDATE marriages "
-                            "SET agreed = 1"
+                            "SET agreed = 1 "
                             "WHERE chat_id = (?) AND message_id = (?)",
                             (chat_id, message_id))
         self.connection.commit()
