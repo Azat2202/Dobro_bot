@@ -29,8 +29,9 @@ class DatabaseManager:
                                                (user1, user1, chat_id)).fetchone()
         is_second_married = self.cursor.execute('SELECT 1 '
                                                 'FROM marriages '
-                                                'WHERE user1 = (?) OR user2 = (?) AND betrothed = 1',
-                                                (user2, user2)).fetchone()
+                                                'WHERE (user1 = (?) OR user2 = (?)) '
+                                                'AND betrothed = 1 AND chat_id = (?)',
+                                                (user2, user2, chat_id)).fetchone()
         return is_first_married or is_second_married
 
     def inc_message(self, user_id: int, chat_id: int, first_name: str, last_name: str):
@@ -66,7 +67,7 @@ class DatabaseManager:
 
     def get_users(self, chat_id):
         return self.cursor.execute("""
-        SELECT id, name, surname FROM users WHERE chat_id = (?)""", (chat_id, )).fetchall()
+        SELECT id, name, surname FROM users WHERE chat_id = (?)""", (chat_id,)).fetchall()
 
     def karma_repr(self, chat_id: int):
         return self.cursor.execute("SELECT users.name, users.surname, messages.karma "
@@ -96,13 +97,15 @@ class DatabaseManager:
 
     def marriage_agree(self, user_id: int, chat_id: int, message_id: int):
         data = self.cursor.execute("SELECT * "
-                                   "FROM marriages "
-                                   "WHERE chat_id = (?) and message_id = (?)",
-                                   (chat_id, message_id)).fetchone()
-        marriage_time = datetime.strptime(data[2], "%y-%m-%d %H:%M:%S")
+                                         "FROM marriages "
+                                         "WHERE chat_id = (?) and message_id = (?)",
+                                         (chat_id,
+                                          message_id)).fetchone()
+        user1, user2, date, witness1, witness2, chat_id, message_id, betrothed, agreed = data
+        marriage_time = datetime.strptime(date, "%y-%m-%d %H:%M:%S")
         time_delta = datetime.now() - marriage_time
 
-        if user_id != data[1]:
+        if user_id != user2:
             raise WrongUserException
         if time_delta.seconds > 600:
             raise TimeLimitException
@@ -120,7 +123,7 @@ class DatabaseManager:
                             (chat_id, message_id))
         self.connection.commit()
         # marriage status, user1, user2, first witness, second witness
-        return data[3] and data[4] and data[8] == 1, data[0], data[1], data[3], data[4]
+        return witness1 and witness2, user1, user2, witness1, witness2, self.__get_name(user1), self.__get_name(user2)
 
     def marriage_disagree(self, user_id: int, chat_id: int, message_id: int):
         data = self.cursor.execute("SELECT * "
@@ -139,29 +142,29 @@ class DatabaseManager:
         data = self.cursor.execute("SELECT * FROM marriages "
                                    "WHERE chat_id = (?) and message_id = (?)",
                                    (chat_id, message_id)).fetchone()
-        marriage_time = datetime.strptime(data[2], "%y-%m-%d %H:%M:%S")
+        user1, user2, date, witness1, witness2, chat, msg, betrothed, agreed = data
+        marriage_time = datetime.strptime(date, "%y-%m-%d %H:%M:%S")
         time_delta = datetime.now() - marriage_time
-        if user_id in (data[0], data[1], data[3], data[4]):
+        if user_id in (user1, user2, witness1, witness2):
             raise WrongUserException
         if time_delta.seconds > 600:
             raise TimeLimitException
-
-        if not data[3]:
+        if not witness1:
             self.cursor.execute(f"UPDATE marriages SET witness1 = (?) WHERE chat_id = (?) and message_id = (?)",
                                 (user_id, chat_id, message_id))
             self.connection.commit()
-            return data[8], False, data[0], self.__get_name(data[0]), data[1], self.__get_name(data[1])
-        elif not data[4]:
+            return (agreed and bool(witness1)), agreed, bool(witness1), user1, self.__get_name(user1), user2, self.__get_name(user2)
+        elif not witness2:
             self.cursor.execute(f"UPDATE marriages SET witness2 = (?) WHERE chat_id = (?) and "
                                 f"message_id = (?)",
                                 (user_id, chat_id, message_id))
             self.connection.commit()
-            if data[8]:
+            if agreed:
                 self.cursor.execute(f"UPDATE marriages SET betrothed = 1 WHERE chat_id = (?) and "
                                     f"message_id = (?)",
                                     (chat_id, message_id))
                 self.connection.commit()
-            return data[8], True, data[0], self.__get_name(data[0]), data[1], self.__get_name(data[1])
+            return (agreed and bool(witness1)), agreed, bool(witness1), user1, self.__get_name(user1), user2, self.__get_name(user2)
 
     def marriages_repr(self, chat_id: int):
         return self.cursor.execute("""
