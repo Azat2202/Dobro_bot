@@ -40,7 +40,7 @@ async def new_sex(message: types.Message):
             await message.reply(
                 emoji.emojize(
                     f'[{message.reply_to_message.from_user.first_name}](tg://user?id={message.reply_to_message.from_user.id}), '
-                    f'[{format_name(message.reply_to_message.from_user.first_name, message.reply_to_message.from_user.last_name)}](tg://user?id={message.reply_to_message.from_user.id}) '
+                    f'[{message.from_user.first_name}](tg://user?id={message.from_user.id}) '
                     f'предлагает вам секс! Вы согласны? :pleading_face::pleading_face::pleading_face: '), reply_markup=inline_sex_kb, parse_mode='Markdown')
         else:
             await message.reply('Чтобы заняться сексом вам необходимо ответить командой на сообщение')

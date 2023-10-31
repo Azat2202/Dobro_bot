@@ -241,6 +241,8 @@ class DatabaseManager:
     def __add_new_user(self, chat_id: int, user_id: int, name: str, surname: str):
         name = name.replace("[", "{").replace("]", "}")
         self.cursor.execute(f"INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?)", (user_id, name, surname, chat_id))
+        if self.cursor.rowcount > 0:
+            self.cursor.execute(f"INSERT OR IGNORE INTO messages VALUES (?, ?, ?, ?)", (user_id, chat_id, 0, 0))
         self.connection.commit()
 
     def close(self):

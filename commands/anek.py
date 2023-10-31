@@ -1,6 +1,7 @@
 import requests
 from aiogram import types
 from aiogram.dispatcher import filters
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bs4 import BeautifulSoup
 
 from database.DatabseManager import DatabaseManager
