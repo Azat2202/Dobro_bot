@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c433b44e-5a9d-42f8-ae05-0047862e0fa6" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7bc8963c-28b3-4029-a462-dc4b73724de0.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7bc8963c-28b3-4029-a462-dc4b73724de0.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/7bc8963c-28b3-4029-a462-dc4b73724de0/storage_v2/_src_/schema/main.uQUzAA.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/7bc8963c-28b3-4029-a462-dc4b73724de0/storage_v2/_src_/schema/main.uQUzAA.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/commands/sex.py" beforeDir="false" afterPath="$PROJECT_DIR$/commands/sex.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/database/DatabseManager.py" beforeDir="false" afterPath="$PROJECT_DIR$/database/DatabseManager.py" afterDir="false" />
@@ -75,7 +73,7 @@
       <recent name="C:\Users\azat2\PycharmProjects\dobro_bot\resources" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.sex">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="dobro_bot" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -99,6 +97,37 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="sex" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="dobro_bot" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/commands" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/commands/sex.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Python.main" />
+      <item itemvalue="Python.sex" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.sex" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -111,7 +140,7 @@
       <workItem from="1698500769793" duration="18130000" />
       <workItem from="1698578503171" duration="3160000" />
       <workItem from="1698686240332" duration="6464000" />
-      <workItem from="1698700930805" duration="5478000" />
+      <workItem from="1698700930805" duration="8804000" />
     </task>
     <servers />
   </component>
@@ -119,9 +148,10 @@
     <option name="version" value="3" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/dobro_bot$main.coverage" NAME="main Coverage Results" MODIFIED="1698706430882" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/dobro_bot$main.coverage" NAME="main Coverage Results" MODIFIED="1698764936763" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/dobro_bot$marriage.coverage" NAME="marriage Coverage Results" MODIFIED="1698700787191" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/commands" />
     <SUITE FILE_PATH="coverage/dobro_bot$main__1_.coverage" NAME="main (1) Coverage Results" MODIFIED="1698516127725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/src" />
+    <SUITE FILE_PATH="coverage/dobro_bot$sex.coverage" NAME="sex Coverage Results" MODIFIED="1698764358863" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/commands" />
     <SUITE FILE_PATH="coverage/dobro_bot$DatabseManager.coverage" NAME="DatabseManager Coverage Results" MODIFIED="1698701776326" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/database" />
   </component>
 </project>

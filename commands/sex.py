@@ -14,10 +14,13 @@ async def new_sex(message: types.Message):
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         every, unique = db_worker.sex_count(message.chat.id, message.from_user.id)
+        data = db_worker.get_sex_history(message.chat.id, message.from_user.id)
         if every == 0:
             await message.reply("У вас пока еще не было секса но не отчаивайтесь!")
         else:
-            await message.reply(f"Секс у вас был {every} раз с {unique} партнерами")
+            await message.reply(f"Секс у вас был {every} раз с {unique} партнерами\n"
+                                f"Наиболее популярные: \n"
+                                + "\n".join([f"  - {name} - {count} раз" for u_id, name, count in data]))
 
 
 @dp.message_handler(filters.Text(equals='!Секс', ignore_case=True))
@@ -27,16 +30,16 @@ async def new_sex(message: types.Message):
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         if message.reply_to_message:
-            # if message.reply_to_message.from_user.id == message.from_user.id:
-            #     await message.reply('Вы не можете заняться сексом сами с собой!')
-            #     return
+            if message.reply_to_message.from_user.id == message.from_user.id:
+                await message.reply('Вы не можете заняться сексом сами с собой!')
+                return
             inline_sex_kb = InlineKeyboardMarkup().add(
                 InlineKeyboardButton('Согласен', callback_data=f'sex_agreement {message.chat.id} {message.reply_to_message.from_user.id}'),
                 InlineKeyboardButton('Не согласен', callback_data=f'sex_refusal {message.chat.id} {message.reply_to_message.from_user.id}')
             )
             await message.reply(
                 emoji.emojize(
-                    f'[{format_name(message.from_user.first_name, message.from_user.last_name)}](tg://user?id={message.reply_to_message.from_user.id}), '
+                    f'[{message.reply_to_message.from_user.first_name}](tg://user?id={message.reply_to_message.from_user.id}), '
                     f'[{format_name(message.reply_to_message.from_user.first_name, message.reply_to_message.from_user.last_name)}](tg://user?id={message.reply_to_message.from_user.id}) '
                     f'предлагает вам секс! Вы согласны? :pleading_face::pleading_face::pleading_face: '), reply_markup=inline_sex_kb, parse_mode='Markdown')
         else:

@@ -75,6 +75,23 @@ class DatabaseManager:
                                      (user1, user1, chat_id)).fetchone()[0]
         return every, unique
 
+    def get_sex_history(self, chat_id: int, user1: int):
+        return self.cursor.execute("""
+                            SELECT partner.id, partner.name, COUNT(user2)
+                            FROM (
+                                SELECT id,user1, user2, chat_id
+                                FROM sex
+                                WHERE user1 = ? AND chat_id = ?
+                                UNION SELECT id, user2, user1, chat_id
+                                FROM sex
+                                WHERE user2 = ? AND chat_id = ?
+                            ) as t
+                            JOIN users as partner
+                            ON user2=partner.id AND t.chat_id = partner.chat_id
+                            GROUP BY user2;""",
+                            (user1, chat_id, user1, chat_id)).fetchall()
+
+
     def get_messages(self, chat_id: int):
         return self.cursor.execute("SELECT users.name, users.surname, messages.message_count "
                                    "FROM messages "
