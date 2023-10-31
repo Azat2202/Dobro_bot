@@ -4,7 +4,7 @@ from random import choice, randint
 from aiogram import types
 from aiogram.dispatcher import filters
 
-from commands.truth_or_dare import get_wish
+from commands.truth_or_dare import get_wish, get_next_day_horo
 from configuration import *
 from database.DatabseManager import DatabaseManager
 from loader import dp, bot
@@ -42,5 +42,16 @@ async def all_horo(message: types.Message):
                               message.from_user.last_name)
         today_horo = get_wish(db_worker.get_users(message.chat.id))
     out = f'{message.from_user.first_name}{"" if message.from_user.last_name is None else " " + str(message.from_user.last_name)}{today_horo}'
+    await bot.send_message(message.chat.id, out, reply_to_message_id=message.message_id)
+
+
+@dp.message_handler(filters.Text(equals='!Пожелание', ignore_case=True))
+@dp.message_handler(commands=['wish'])
+async def all_horo(message: types.Message):
+    with DatabaseManager() as db_worker:
+        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
+                              message.from_user.last_name)
+        today_horo = get_next_day_horo()
+    out = f'{message.from_user.first_name}{"" if message.from_user.last_name is None else " " + str(message.from_user.last_name)}, {today_horo}'
     await bot.send_message(message.chat.id, out, reply_to_message_id=message.message_id)
 
