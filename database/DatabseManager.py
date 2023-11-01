@@ -34,6 +34,56 @@ class DatabaseManager:
                                                 (user2, user2, chat_id)).fetchone()
         return is_first_married or is_second_married
 
+    def get_partner(self, user_id: int, chat_id: int):
+        data = self.cursor.execute("""
+                            SELECT user1, user2
+                            FROM marriages
+                            WHERE (marriages.user1=? or marriages.user2=?)  and chat_id = ?;""",
+                                   (user_id, user_id, chat_id)).fetchone()
+        if not data:
+            return data
+        if data[0] == user_id:
+            return data[1]
+        return data[0]
+
+    def is_adopted(self, child: int, chat_id: int):
+        return self.cursor.execute('SELECT 1 '
+                                   'FROM children '
+                                   'WHERE child = (?) AND chat_id = (?)',
+                                   (child, chat_id)).fetchone()
+
+    def is_parent(self, parent: int, child: int, chat_id: int):
+        data = self.cursor.execute("""
+                        WITH RECURSIVE parent_of_parent AS (
+                        SELECT children.parent, m_l.user2, m_r.user1
+                        FROM children
+                        LEFT JOIN marriages as m_l
+                        ON children.parent = m_l.user1 AND m_l.chat_id = :chat_id
+                        LEFT JOIN marriages as m_r
+                        ON children.parent = m_r.user2 AND m_r.chat_id = :chat_id
+                        WHERE children.child = :user_id AND children.chat_id = :chat_id
+                        
+                        UNION SELECT children.parent, m_l.user2, m_r.user1
+                        FROM children
+                        LEFT JOIN marriages as m_l
+                        ON children.parent = m_l.user1 AND m_l.chat_id = :chat_id
+                        LEFT JOIN marriages as m_r
+                        ON children.parent = m_r.user2 AND m_r.chat_id = :chat_id
+                        JOIN parent_of_parent ON (children.child = parent_of_parent.parent
+                                            OR children.child = parent_of_parent.user1
+                                            OR children.child = parent_of_parent.user2)
+                                            AND children.chat_id = :chat_id
+                        )
+                        SELECT *
+                        FROM parent_of_parent;
+                """,{'user_id': parent, 'chat_id': chat_id}).fetchall()
+        return any(child in line for line in data)
+
+    def add_child(self, parent: int, child: int, chat_id: int):
+        self.cursor.execute("INSERT INTO children (parent, child, chat_id) "
+                            "VALUES (?, ?, ?)", (parent, child, chat_id))
+        self.connection.commit()
+
     def inc_message(self, user_id: int, chat_id: int, first_name: str, last_name: str):
         self.__add_new_user(chat_id, user_id, first_name, last_name)
         self.cursor.execute("UPDATE messages "
@@ -64,14 +114,14 @@ class DatabaseManager:
 
     def sex_count(self, chat_id: int, user1: int):
         every = self.cursor.execute("SELECT COUNT(*) "
-                                   "FROM sex "
-                                   "WHERE (user1 = ? OR user2 = ?) AND chat_id = ?;",
-                            (user1, user1, chat_id)).fetchone()[0]
-        unique = self.cursor.execute("SELECT COUNT(*) "
-                                    "FROM( "
-                                    "SELECT DISTINCT user1, user2 "
                                     "FROM sex "
-                                    "WHERE (user1 = ? OR user2 = ?) AND chat_id = ?);",
+                                    "WHERE (user1 = ? OR user2 = ?) AND chat_id = ?;",
+                                    (user1, user1, chat_id)).fetchone()[0]
+        unique = self.cursor.execute("SELECT COUNT(*) "
+                                     "FROM( "
+                                     "SELECT DISTINCT user1, user2 "
+                                     "FROM sex "
+                                     "WHERE (user1 = ? OR user2 = ?) AND chat_id = ?);",
                                      (user1, user1, chat_id)).fetchone()[0]
         return every, unique
 
@@ -89,8 +139,7 @@ class DatabaseManager:
                             JOIN users as partner
                             ON user2=partner.id AND t.chat_id = partner.chat_id
                             GROUP BY user2;""",
-                            (user1, chat_id, user1, chat_id)).fetchall()
-
+                                   (user1, chat_id, user1, chat_id)).fetchall()
 
     def get_messages(self, chat_id: int):
         return self.cursor.execute("SELECT users.name, users.surname, messages.message_count "
@@ -133,10 +182,10 @@ class DatabaseManager:
 
     def marriage_agree(self, user_id: int, chat_id: int, message_id: int):
         data = self.cursor.execute("SELECT * "
-                                         "FROM marriages "
-                                         "WHERE chat_id = (?) and message_id = (?)",
-                                         (chat_id,
-                                          message_id)).fetchone()
+                                   "FROM marriages "
+                                   "WHERE chat_id = (?) and message_id = (?)",
+                                   (chat_id,
+                                    message_id)).fetchone()
         user1, user2, date, witness1, witness2, chat_id, message_id, betrothed, agreed = data
         marriage_time = datetime.strptime(date, "%y-%m-%d %H:%M:%S")
         time_delta = datetime.now() - marriage_time
@@ -189,7 +238,8 @@ class DatabaseManager:
             self.cursor.execute(f"UPDATE marriages SET witness1 = (?) WHERE chat_id = (?) and message_id = (?)",
                                 (user_id, chat_id, message_id))
             self.connection.commit()
-            return (agreed and bool(witness1)), agreed, bool(witness1), user1, self.__get_name(user1), user2, self.__get_name(user2)
+            return (agreed and bool(witness1)), agreed, bool(witness1), user1, self.__get_name(
+                user1), user2, self.__get_name(user2)
         elif not witness2:
             self.cursor.execute(f"UPDATE marriages SET witness2 = (?) WHERE chat_id = (?) and "
                                 f"message_id = (?)",
@@ -200,7 +250,8 @@ class DatabaseManager:
                                     f"message_id = (?)",
                                     (chat_id, message_id))
                 self.connection.commit()
-            return (agreed and bool(witness1)), agreed, bool(witness1), user1, self.__get_name(user1), user2, self.__get_name(user2)
+            return (agreed and bool(witness1)), agreed, bool(witness1), user1, self.__get_name(
+                user1), user2, self.__get_name(user2)
 
     def marriages_repr(self, chat_id: int):
         return self.cursor.execute("""

@@ -5,7 +5,6 @@ from aiogram.utils import emoji
 
 from database.DatabseManager import DatabaseManager
 from loader import dp
-from utility import format_name
 
 
 @dp.message_handler(commands=['my_sex'])
