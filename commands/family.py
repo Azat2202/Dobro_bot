@@ -13,6 +13,7 @@ from graphviz import Graph
 @dp.message_handler(commands=['family'])
 async def family_repr(message: types.Message):
     with DatabaseManager() as db_worker:
+        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
         edges = db_worker.get_edges(message.chat.id)
         marriages = [[data[1], data[3]] for data in db_worker.marriages_repr(message.chat.id)]
         nodes = [item for sublist in marriages for item in sublist] + [item for sublist in edges for item in sublist]

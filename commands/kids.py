@@ -67,24 +67,20 @@ async def agreed(call: types.CallbackQuery):
         if call.from_user.id != int(user_id):
             await call.answer('Вы не можете согласиться')
             return
-        # Нельзя брать в дети партнера
-        partner_id = db_worker.get_partner(call.message.from_user.id, call.message.chat.id)
-        if partner_id == call.message.reply_to_message.from_user.id:
-            await call.answer("Нельзя брать в дети партнера!")
-            await call.message.edit_text("Нельзя брать в дети партнера!")
-            return
+        parent = call.message.reply_to_message.from_user.id
+        child = call.from_user.id
         # В дети нельзя чужого ребенка
-        if db_worker.is_adopted(call.message.reply_to_message.from_user.id, call.message.chat.id):
+        if db_worker.is_adopted(child, call.message.chat.id):
             await call.answer('Это уже чей-то ребенок!')
             await call.message.edit_text('Это уже чей-то ребенок!')
             return
         # В дети нельзя своих родителей/дедушек итп
-        if db_worker.is_parent(call.message.from_user.id, call.message.reply_to_message.from_user.id, call.message.chat.id):
+        if db_worker.is_parent(parent, child, call.message.chat.id):
             await call.answer('Вы не можете брать в дети своих родителей/прародителей итп')
             await call.message.edit_text('Вы не можете брать в дети своих родителей/прародителей итп')
             return
         # В дети нельзя родителей/дедушек итп партнера
-        if db_worker.is_parent(partner_id, call.message.reply_to_message.from_user.id, call.message.chat.id):
+        if db_worker.is_parent(parent, child, call.message.chat.id):
             await call.answer('Вы не можете брать в дети родителей/прародителей итп своего партнера')
             await call.message.edit_text('Вы не можете брать в дети родителей/прародителей итп своего партнера')
             return
