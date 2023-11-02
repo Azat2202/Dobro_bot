@@ -84,6 +84,17 @@ class DatabaseManager:
                             "VALUES (?, ?, ?)", (parent, child, chat_id))
         self.connection.commit()
 
+    def get_edges(self, chat_id: int):
+        return self.cursor.execute("""
+                            SELECT pr_name.name, ch_name.name
+                            FROM children
+                            JOIN users AS pr_name
+                            ON children.chat_id = pr_name.chat_id AND children.parent = pr_name.id
+                            JOIN users AS ch_name
+                                ON children.chat_id = ch_name.chat_id AND children.child = ch_name.id
+                            WHERE children.chat_id = :chat_id;""",
+                            {'chat_id' : chat_id}).fetchall()
+
     def inc_message(self, user_id: int, chat_id: int, first_name: str, last_name: str):
         self.__add_new_user(chat_id, user_id, first_name, last_name)
         self.cursor.execute("UPDATE messages "

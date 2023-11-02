@@ -9,5 +9,6 @@ from . import top
 from . import truth_or_dare
 from . import sex
 from . import kids
+from . import family
 
 from . import regular_message

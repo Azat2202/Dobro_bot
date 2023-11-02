@@ -38,7 +38,6 @@ async def new_sex(message: types.Message):
             if db_worker.is_parent(partner_id, message.reply_to_message.from_user.id, message.chat.id):
                 await message.reply('Вы не можете брать в дети родителей/прародителей итп своего партнера')
                 return
-
             inline_child_kb = InlineKeyboardMarkup().add(
                 InlineKeyboardButton('Согласен', callback_data=f'child_agreement {message.chat.id} {message.reply_to_message.from_user.id}'),
                 InlineKeyboardButton('Не согласен', callback_data=f'child_refusal {message.chat.id} {message.reply_to_message.from_user.id}')
