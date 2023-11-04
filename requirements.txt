@@ -5,6 +5,4 @@ beautifulsoup4~=4.10.0
 lxml~=4.9.3
 apscheduler~=3.10.4
 python-dotenv~=1.0.0
-transformers
-torch~=2.1.0
 graphviz~=0.20.1
