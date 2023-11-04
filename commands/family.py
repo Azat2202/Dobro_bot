@@ -1,11 +1,9 @@
 import os
 
-import unidecode
 from aiogram import types
 from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputFile
 from aiogram.utils import emoji
-from networkx.drawing.nx_agraph import graphviz_layout
 
 from database.DatabseManager import DatabaseManager
 from loader import dp
@@ -47,8 +45,8 @@ def make_graph(nodes, edges, marriages, chat_name, id: str):
         c.attr(cluster='true')
         c.attr(peripheries='0')
         c.attr(label="")
-        c.node(i, _attributes={'fillcolor': '#99B2DD'})
-        c.node(j, _attributes={'fillcolor': '#E9AFA3'})
+        c.node(i, _attributes={'fillcolor': '#99B2DD' if len(i) % 2 == 0 else '#E9AFA3'})
+        c.node(j, _attributes={'fillcolor': '#E9AFA3' if len(i) % 2 == 0 else '#99B2DD'})
         c.edge(i, j, _attributes={'color': 'black:black', 'constraint': 'false'})
         f.subgraph(c)
     for nod in nodes:
