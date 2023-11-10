@@ -19,8 +19,11 @@ async def new_marriage(message: types.Message):
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         if message.reply_to_message:
-            if db_worker.is_married(message.from_user.id, message.reply_to_message.from_user.id, message.chat.id):
+            if db_worker.get_partner(message.from_user.id, message.chat.id):
                 await message.reply('Вы уже состоите в браке!')
+                return
+            elif db_worker.get_partner(message.reply_to_message.from_user.id, message.chat.id):
+                await message.reply('Этот человек уже состоит в браке!')
                 return
             elif message.reply_to_message.from_user.id == message.from_user.id:
                 await message.reply('Вы не можете заключить брак самим с собой!')
