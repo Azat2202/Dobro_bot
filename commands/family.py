@@ -37,6 +37,7 @@ def make_graph(nodes, edges, marriages, chat_name, id: str):
     f.attr(label=f'{chat_name}')
     f.attr(labelloc='t')
     f.attr(fontname='Tahoma')
+    f.attr(ranksep='0.65')
     for n, k in enumerate(marriages):
         i, j = k
         c = Graph(f'parents{n}')

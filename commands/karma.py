@@ -16,7 +16,11 @@ async def plus_karma(message: types.Message):
                 await message.reply('Нельзя изменять карму себе')
             else:
                 db_worker.inc_karma(message.reply_to_message.from_user.id, message.chat.id)
-                await message.reply('Карма увеличена!')
+                if db_worker.is_parent(message.from_user.id, message.reply_to_message.from_user.id, message.chat.id):
+                    db_worker.inc_karma(message.reply_to_message.from_user.id, message.chat.id)
+                    await message.reply('Карма увеличена в двойном размере!')
+                else:
+                    await message.reply('Карма увеличена!')
         else:
             await message.reply('Увеличить карму можно ответом на сообщение')
 
@@ -31,6 +35,10 @@ async def minus_karma(message: types.Message):
                 await message.reply('Нельзя изменять карму себе')
             else:
                 db_worker.dec_karma(message.reply_to_message.from_user.id, message.chat.id)
-                await message.reply('Карма уменьшена! ')
+                if db_worker.is_parent(message.from_user.id, message.reply_to_message.from_user.id, message.chat.id):
+                    db_worker.dec_karma(message.reply_to_message.from_user.id, message.chat.id)
+                    await message.reply('Карма уменьшена в двойном размере!')
+                else:
+                    await message.reply('Карма уменьшена!')
         else:
             await message.reply('Уменьшить карму можно ответом на сообщение')
