@@ -26,7 +26,7 @@ async def solo_horo(message: types.Message):
         last_time_horo = now_time
         for user_id, name, surname in users:
             today_horo = get_wish(users)
-            out += f'[{name}](tg://user?id={user_id}){today_horo}\n'
+            out += f'{name}{today_horo}\n'
         await bot.send_message(message.chat.id, out, parse_mode='Markdown', reply_to_message_id=message.message_id)
     else:
         await bot.send_message(message.chat.id,

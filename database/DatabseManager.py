@@ -52,7 +52,7 @@ class DatabaseManager:
                                    'WHERE child = (?) AND chat_id = (?)',
                                    (child, chat_id)).fetchone()
 
-    def is_parent(self, parent: int, child: int, chat_id: int):
+    def is_ancestor(self, parent: int, child: int, chat_id: int):
         data = self.cursor.execute("""
                         WITH RECURSIVE parent_of_parent AS (
                         SELECT children.parent, m_l.user2, m_r.user1
@@ -76,12 +76,37 @@ class DatabaseManager:
                         )
                         SELECT *
                         FROM parent_of_parent;
-                """,{'user_id': parent, 'chat_id': chat_id}).fetchall()
+                """, {'user_id': parent, 'chat_id': chat_id}).fetchall()
         return any(child in line for line in data)
+
+    def is_parent(self, parent_id: int, child_id: int, chat_id: int):
+        return self.cursor.execute("""
+        SELECT 1
+        FROM children
+        LEFT JOIN marriages as m_l
+        ON (children.parent = m_l.user1 OR children.parent = m_l.user2)
+        AND m_l.chat_id = :chat_id
+        WHERE children.child = :child_id 
+        AND children.chat_id = :chat_id
+        AND (m_l.user2 = :parent_id OR m_l.user1 = :parent_id)""",
+                                   {'parent_id': parent_id, 'child_id': child_id, 'chat_id': chat_id}).fetchone()
+
+    def get_parent(self, child_id: int, chat_id: int):
+        return self.cursor.execute("""
+        SELECT parent
+        FROM children
+        WHERE child = ? AND chat_id = ?""", (child_id, chat_id)).fetchone()
 
     def add_child(self, parent: int, child: int, chat_id: int):
         self.cursor.execute("INSERT INTO children (parent, child, chat_id) "
                             "VALUES (?, ?, ?)", (parent, child, chat_id))
+        self.connection.commit()
+
+    def remove_child(self, parent_id: int, child_id: int, chat_id: int):
+        self.cursor.execute("""
+        DELETE 
+        FROM children
+        WHERE parent = ? AND child = ? and chat_id = ?""", (parent_id, child_id, chat_id))
         self.connection.commit()
 
     def get_edges(self, chat_id: int):
@@ -93,7 +118,7 @@ class DatabaseManager:
                             JOIN users AS ch_name
                                 ON children.chat_id = ch_name.chat_id AND children.child = ch_name.id
                             WHERE children.chat_id = :chat_id;""",
-                            {'chat_id' : chat_id}).fetchall()
+                                   {'chat_id': chat_id}).fetchall()
 
     def inc_message(self, user_id: int, chat_id: int, first_name: str, last_name: str):
         self.__add_new_user(chat_id, user_id, first_name, last_name)
