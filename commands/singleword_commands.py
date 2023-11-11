@@ -14,6 +14,7 @@ async def help_(message: types.Message):
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
     await message.reply("""
 Список всех доступных команд:
+/start - инициализация чата
 /help - вывести справку по всем командам
 /marry - заключить брак с человеком из чата
 /divorce - развестись
@@ -37,7 +38,9 @@ async def help_(message: types.Message):
 Вопрос ... - Задать вопрос да/нет
 Совместимость ... - Узнать свою совместимость с человеком
 добряш или плюс или Спасибо - Повысить карму 
-минус или токс - Понизить карму""")
+минус или токс - Понизить карму
+Настройки:
+/poll_creation - отправка ежедневных опросов настроения""")
 
 
 @dp.message_handler(filters.Text(startswith='Совместимость', ignore_case=True))

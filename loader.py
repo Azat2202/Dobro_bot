@@ -11,7 +11,10 @@ bot = Bot(token=API_TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 
+from schedules.poll_creator import *
 scheduler = AsyncIOScheduler()
+scheduler.add_job(create_poll, 'cron', day_of_week='*', hour=19, minute=00, second=0)
+scheduler.start()
 
 # model_name = 'Skoltech/russian-inappropriate-messages'
 # tokenizer = BertTokenizer.from_pretrained(model_name)

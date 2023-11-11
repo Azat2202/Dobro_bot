@@ -4,6 +4,7 @@ from aiogram import executor
 from configuration import *
 import database
 import commands
+import schedules
 
 last_time_banned = datetime.datetime.now() - datetime.timedelta(seconds=wait_seconds)
 last_time_mentioned = datetime.datetime.now() - datetime.timedelta(seconds=wait_seconds_for_mention)
