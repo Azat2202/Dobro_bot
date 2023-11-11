@@ -1,6 +1,5 @@
 import datetime
 
-import torch
 from aiogram import types
 
 from database.WeddingDatabseManager import DatabaseManager
