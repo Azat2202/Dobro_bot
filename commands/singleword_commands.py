@@ -8,30 +8,36 @@ from database.WeddingDatabseManager import DatabaseManager
 from loader import dp, bot
 
 
-@dp.message_handler(filters.Text(equals='!Помощь', ignore_case=True))
 @dp.message_handler(commands='help')
 async def help_(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
-    await message.reply('Список всех доступных команд:\n'
-                        '/marry или !Брак - Заключить брак с человеком из чата\n'
-                        '/divorce или !Развод - Развестись\n'
-                        '/marriages или !Браки - Показать текущие браки\n'
-                        '/anek или !Анекдот - Отправить случайный анекдот\n'
-                        '/truth или !Правда- Получить задание правды\n'
-                        '/sex - заняться сексом с участником чата\n'
-                        '/my_sex - получить свою историю половых связей\n'
-                        '/dare или !Действие - Получить действие\n'
-                        'Важный вопрос ... - Задать важный вопрос\n'
-                        'Вопрос ... - Задать вопрос да/нет\n'
-                        'Совместимость ... - Узнать свою совместимость с человеком\n'
-                        '/horo или !Гороскоп - Получить индивидуальный гороскоп\n'
-                        '/horo_for_all - Отправить гороскоп для всех\n'
-                        '/mark_all или !Сбор - Отметить всех участников\n'
-                        'добряш или плюс или Спасибо - Повысить карму \n'
-                        'минус или токс - Понизить карму\n'
-                        '/top_spamers или !Спамеры - Топ участников по сообщениям\n'
-                        '/top_karma или !Карма - Топ учатников по карме')
+    await message.reply("""
+Список всех доступных команд:
+/help - вывести справку по всем командам
+/marry - заключить брак с человеком из чата
+/divorce - развестись
+/marriages - показать текущие браки
+/sex - заняться сексом с участником чата
+/my_sex - получить историю половых связей
+/adopt - приютить ребенка
+/abandon - отказаться от ребенка
+/escape - убежать от родителей
+/family - семейное древо чата
+/anek - отправить случайный анекдот
+/horo - получить индивидуальный гороскоп
+/horo_for_all - отправить гороскоп для всех
+/wish - получить пожелание на следующий день
+/truth - получить задание правды
+/dare - получить задание действие
+/mark_all - отметить всех участников
+/top_spamers  - топ участников по сообщениям
+/top_karma - топ учатников по карме
+Важный вопрос ... - Задать важный вопрос
+Вопрос ... - Задать вопрос да/нет
+Совместимость ... - Узнать свою совместимость с человеком
+добряш или плюс или Спасибо - Повысить карму 
+минус или токс - Понизить карму""")
 
 
 @dp.message_handler(filters.Text(startswith='Совместимость', ignore_case=True))
@@ -49,14 +55,12 @@ async def yn(message: types.Message):
 
 
 @dp.message_handler(commands='truth')
-@dp.message_handler(filters.Text(startswith='!Правда', ignore_case=True))
 async def yn(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
     await message.reply(get_truth())
 
 
-@dp.message_handler(filters.Text(startswith='!Действие', ignore_case=True))
 @dp.message_handler(commands='dare')
 async def yn(message: types.Message):
     with DatabaseManager() as db_worker:

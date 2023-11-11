@@ -34,7 +34,6 @@ async def solo_horo(message: types.Message):
     await bot.delete_message(message.chat.id, message.message_id)
 
 
-@dp.message_handler(filters.Text(equals='!Гороскоп', ignore_case=True))
 @dp.message_handler(commands=['horo'])
 async def all_horo(message: types.Message):
     with DatabaseManager() as db_worker:

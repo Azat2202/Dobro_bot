@@ -8,7 +8,6 @@ from database.WeddingDatabseManager import DatabaseManager
 from loader import dp
 
 
-@dp.message_handler(filters.Text(equals='!Анекдот', ignore_case=True))
 @dp.message_handler(commands='anek')
 async def anek(message: types.Message):
     with DatabaseManager() as db_worker:

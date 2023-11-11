@@ -12,7 +12,6 @@ from loader import dp
 from utility import format_name, beautiful_time_repr
 
 
-@dp.message_handler(filters.Text(equals='!Брак', ignore_case=True))
 @dp.message_handler(commands=['marry'])
 async def new_marriage(message: types.Message):
     with DatabaseManager() as db_worker:
@@ -48,7 +47,6 @@ async def new_marriage(message: types.Message):
             await message.reply('Чтобы заключить брак вам необходимо ответить командой на сообщение')
 
 
-@dp.message_handler(filters.Text(equals='!Браки', ignore_case=True))
 @dp.message_handler(commands='marriages')
 async def marriages_repr(message: types.Message):
     with DatabaseManager() as db_worker:
@@ -69,7 +67,6 @@ async def marriages_repr(message: types.Message):
         await message.reply(out, parse_mode='Markdown')
 
 
-@dp.message_handler(filters.Text(equals='!Развод', ignore_case=True))
 @dp.message_handler(commands='divorce')
 async def divorce(message: types.Message):
     with DatabaseManager() as db_worker:
