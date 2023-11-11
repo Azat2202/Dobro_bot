@@ -12,17 +12,16 @@ async def new_sex(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
-        every, unique = db_worker.sex_count(message.chat.id, message.from_user.id)
+        every = db_worker.sex_count(message.chat.id, message.from_user.id)
         data = db_worker.get_sex_history(message.chat.id, message.from_user.id)
         if every == 0:
             await message.reply("У вас пока еще не было секса но не отчаивайтесь!")
         else:
-            await message.reply(f"Секс у вас был {every} раз с {unique} партнерами\n"
+            await message.reply(f"Секс у вас был {every} раз с {len(data)} партнерами\n"
                                 f"Наиболее популярные: \n"
                                 + "\n".join([f"  - {name} - {count} раз" for u_id, name, count in data]))
 
 
-@dp.message_handler(filters.Text(equals='!Секс', ignore_case=True))
 @dp.message_handler(commands=['sex'])
 async def new_sex(message: types.Message):
     with DatabaseManager() as db_worker:

@@ -153,13 +153,7 @@ class DatabaseManager:
                                     "FROM sex "
                                     "WHERE (user1 = ? OR user2 = ?) AND chat_id = ?;",
                                     (user1, user1, chat_id)).fetchone()[0]
-        unique = self.cursor.execute("SELECT COUNT(*) "
-                                     "FROM( "
-                                     "SELECT DISTINCT user1, user2 "
-                                     "FROM sex "
-                                     "WHERE (user1 = ? OR user2 = ?) AND chat_id = ?);",
-                                     (user1, user1, chat_id)).fetchone()[0]
-        return every, unique
+        return every
 
     def get_sex_history(self, chat_id: int, user1: int):
         return self.cursor.execute("""
