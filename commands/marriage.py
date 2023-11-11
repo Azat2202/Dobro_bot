@@ -6,7 +6,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils import emoji
 
 from commands.inlineKeyboards import form_inline_kb
-from database.DatabseManager import DatabaseManager
+from database.WeddingDatabseManager import DatabaseManager
 from database.exceptions import *
 from loader import dp
 from utility import format_name, beautiful_time_repr

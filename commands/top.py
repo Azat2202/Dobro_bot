@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import filters
 
-from database.DatabseManager import DatabaseManager
+from database.WeddingDatabseManager import DatabaseManager
 from loader import dp, bot
 from utility import format_name
 

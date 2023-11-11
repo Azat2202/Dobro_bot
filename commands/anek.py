@@ -4,7 +4,7 @@ from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from bs4 import BeautifulSoup
 
-from database.DatabseManager import DatabaseManager
+from database.WeddingDatabseManager import DatabaseManager
 from loader import dp
 
 

@@ -3,7 +3,7 @@ import datetime
 import torch
 from aiogram import types
 
-from database.DatabseManager import DatabaseManager
+from database.WeddingDatabseManager import DatabaseManager
 from loader import dp
 
 

@@ -3,8 +3,8 @@ from random import randint, choice
 from aiogram import types
 from aiogram.dispatcher import filters
 
-from commands.truth_or_dare import get_action, get_true
-from database.DatabseManager import DatabaseManager
+from commands.truth_or_dare import get_dare, get_truth
+from database.WeddingDatabseManager import DatabaseManager
 from loader import dp, bot
 
 
@@ -53,7 +53,7 @@ async def yn(message: types.Message):
 async def yn(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
-    await message.reply(get_true())
+    await message.reply(get_truth())
 
 
 @dp.message_handler(filters.Text(startswith='!Действие', ignore_case=True))
@@ -61,7 +61,7 @@ async def yn(message: types.Message):
 async def yn(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
-    await message.reply(get_action())
+    await message.reply(get_dare())
 
 @dp.message_handler(filters.Text(startswith='Важный вопрос', ignore_case=True))
 async def yn(message: types.Message):

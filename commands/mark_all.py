@@ -4,7 +4,7 @@ from aiogram import types
 from aiogram.dispatcher import filters
 
 from configuration import *
-from database.DatabseManager import DatabaseManager
+from database.WeddingDatabseManager import DatabaseManager
 from loader import dp, bot
 
 last_time_mentioned = datetime.datetime.min

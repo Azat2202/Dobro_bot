@@ -5,7 +5,7 @@ from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputFile
 from aiogram.utils import emoji
 
-from database.DatabseManager import DatabaseManager
+from database.WeddingDatabseManager import DatabaseManager
 from loader import dp
 from graphviz import Graph
 

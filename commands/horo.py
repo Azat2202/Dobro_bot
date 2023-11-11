@@ -6,7 +6,7 @@ from aiogram.dispatcher import filters
 
 from commands.truth_or_dare import get_wish, get_next_day_horo
 from configuration import *
-from database.DatabseManager import DatabaseManager
+from database.WeddingDatabseManager import DatabaseManager
 from loader import dp, bot
 
 last_time_horo = datetime.datetime.now() - datetime.timedelta(days=1)
