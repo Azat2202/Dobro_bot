@@ -313,6 +313,7 @@ class WeddingDatabaseManager(DatabaseManager):
                                    (chat_id, user_id, user_id)).fetchone()
         if not data:
             raise WrongUserException
+        return data
 
     def del_marriage(self, chat_id: int, user_id: int):
         self.cursor.execute("DELETE FROM marriages WHERE chat_id = (?) AND (user1 = (?) OR user2 = (?))",
