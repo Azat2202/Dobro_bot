@@ -38,10 +38,10 @@ class DatabaseManager:
         data = self.cursor.execute("""
                             SELECT user1, user2
                             FROM marriages
-                            WHERE (marriages.user1=? or marriages.user2=?)  and chat_id = ?;""",
+                            WHERE (marriages.user1=? or marriages.user2=?) and chat_id = ?;""",
                                    (user_id, user_id, chat_id)).fetchone()
         if not data:
-            return data
+            return None
         if data[0] == user_id:
             return data[1]
         return data[0]
@@ -283,7 +283,24 @@ class DatabaseManager:
             return (agreed and bool(witness1)), agreed, bool(witness1), user1, self.__get_name(
                 user1), user2, self.__get_name(user2)
 
-    def marriages_repr(self, chat_id: int):
+    def get_my_marriage(self, user_id:int, chat_id: int):
+        return self.cursor.execute("""
+        SELECT user_1.id, user_1.name, user_2.id, user_2.name, witness_1.name, witness_2.name, marriages.date, marriages.message_id
+        FROM marriages
+        JOIN users AS user_1
+              ON marriages.user1 = user_1.id AND marriages.chat_id = user_1.chat_id
+        JOIN users AS user_2
+              ON marriages.user2 = user_2.id AND marriages.chat_id = user_2.chat_id
+        JOIN users AS witness_1
+              ON marriages.witness1 = witness_1.id AND marriages.chat_id = witness_1.chat_id
+        JOIN users AS witness_2
+              ON marriages.witness2 = witness_2.id AND marriages.chat_id = witness_2.chat_id
+        WHERE betrothed = 1
+          AND marriages.chat_id = (?)
+          AND (marriages.user1 = ? OR marriages.user2 = ?)
+        ORDER BY date;""", (chat_id, user_id, user_id)).fetchone()
+
+    def get_marriages(self, chat_id: int):
         return self.cursor.execute("""
         SELECT user_1.id, user_1.name, user_2.id, user_2.name, witness_1.name, witness_2.name, marriages.date
         FROM marriages

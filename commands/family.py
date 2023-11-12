@@ -15,7 +15,7 @@ async def family_repr(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
         edges = db_worker.get_edges(message.chat.id)
-        marriages = [[data[1], data[3]] for data in db_worker.marriages_repr(message.chat.id)]
+        marriages = [[data[1], data[3]] for data in db_worker.get_marriages(message.chat.id)]
         nodes = [item for sublist in marriages for item in sublist] + [item for sublist in edges for item in sublist]
         make_graph(nodes, edges, marriages, message.chat.full_name, f"for_{message.from_user.id}")
         await message.reply_photo(InputFile(os.path.join("..", "graphs", f"for_{message.from_user.id}.png")))
@@ -61,7 +61,7 @@ def make_graph(nodes, edges, marriages, chat_name, id: str):
 if __name__ == '__main__':
     with DatabaseManager() as db_worker:
         edges = db_worker.get_edges(-1001819892143)
-        marriages = [[data[1], data[3]] for data in db_worker.marriages_repr(-1001819892143)]
+        marriages = [[data[1], data[3]] for data in db_worker.get_marriages(-1001819892143)]
         nodes = [item for sublist in marriages for item in sublist] + [item for sublist in edges for item in sublist]
         make_graph(nodes, edges, marriages, "VT FLOOD FRIENDLY", "1")
 

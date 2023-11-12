@@ -52,7 +52,7 @@ async def marriages_repr(message: types.Message):
     with DatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
-        data = db_worker.marriages_repr(message.chat.id)
+        data = db_worker.get_marriages(message.chat.id)
         out = 'Статистика по бракам:\n'
         num = 0
         for line in data:
@@ -60,10 +60,27 @@ async def marriages_repr(message: types.Message):
             num += 1
             time_obj = datetime.now() - datetime.strptime(marriage_date, "%y-%m-%d %H:%M:%S")
             out += f'{num}. {user1_name} и {user2_name} - {beautiful_time_repr(time_obj)}\n'
-            out += f'        └Свидетели: {witness1_name} и {witness2_name}\n'
         out += f'\nВсего {num} браков'
         if num == 0:
             out = 'В этой группе еще нет ни одного брака!'
+        await message.reply(out, parse_mode='Markdown')
+
+
+@dp.message_handler(commands='my_marriage')
+async def my_marriages_repr(message: types.Message):
+    with DatabaseManager() as db_worker:
+        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
+                              message.from_user.last_name)
+        data = db_worker.get_my_marriage(message.from_user.id, message.chat.id)
+        if not data:
+            await message.reply("Вы еще не в браке(")
+            return
+        user1, user1_name, user2, user2_name, witness1_name, witness2_name, marriage_date, marriage_msg_id = data
+        time_obj = datetime.strptime(marriage_date, "%y-%m-%d %H:%M:%S")
+        out = f"💝{user1_name} и {user2_name} объединили свои сердца в брак {time_obj}!💝\n"
+        out += (f"{witness1_name} и {witness2_name} желают множества счастливых лет вместе, полных любви, радости и "
+                f"взаимопонимания!\n")
+        out += f"[Память об этом дне до сих пор хранится в сообщениях...](https://t.me/{message.chat.username}/{marriage_msg_id})"
         await message.reply(out, parse_mode='Markdown')
 
 
