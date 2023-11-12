@@ -5,14 +5,14 @@ from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InputFile
 from aiogram.utils import emoji
 
-from database.WeddingDatabseManager import DatabaseManager
+from database.WeddingDatabseManager import WeddingDatabaseManager
 from loader import dp
 from graphviz import Graph
 
 
 @dp.message_handler(commands=['family'])
 async def family_repr(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
         edges = db_worker.get_edges(message.chat.id)
         marriages = [[data[1], data[3]] for data in db_worker.get_marriages(message.chat.id)]
@@ -59,7 +59,7 @@ def make_graph(nodes, edges, marriages, chat_name, id: str):
 
 
 if __name__ == '__main__':
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         edges = db_worker.get_edges(-1001819892143)
         marriages = [[data[1], data[3]] for data in db_worker.get_marriages(-1001819892143)]
         nodes = [item for sublist in marriages for item in sublist] + [item for sublist in edges for item in sublist]

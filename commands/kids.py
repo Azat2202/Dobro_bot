@@ -3,13 +3,13 @@ from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils import emoji
 
-from database.WeddingDatabseManager import DatabaseManager
+from database.WeddingDatabseManager import WeddingDatabaseManager
 from loader import dp
 
 
 @dp.message_handler(commands=['adopt'])
 async def new_sex(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         if message.reply_to_message:
@@ -62,7 +62,7 @@ async def agreed(call: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda c: c.data[:15] == 'child_agreement')
 async def agreed(call: types.CallbackQuery):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         s, chat_id, user_id = call.data.split()
         if call.from_user.id != int(user_id):
             await call.answer('Вы не можете согласиться')
@@ -91,7 +91,7 @@ async def agreed(call: types.CallbackQuery):
 
 @dp.message_handler(commands=['abandon'])
 async def abandon_kid(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         if message.reply_to_message:
@@ -111,7 +111,7 @@ async def abandon_kid(message: types.Message):
 
 @dp.callback_query_handler(lambda c: c.data[:17] == 'abandon_agreement')
 async def agreed(call: types.CallbackQuery):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         s, chat_id, child_id, parent_id = call.data.split()
         if call.from_user.id != int(parent_id):
             await call.answer('Вы не можете отказаться от ребенка')
@@ -131,7 +131,7 @@ async def agreed(call: types.CallbackQuery):
 
 @dp.message_handler(commands=['escape'])
 async def abandon_kid(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         res = db_worker.get_parent(message.from_user.id, message.chat.id)
@@ -150,7 +150,7 @@ async def abandon_kid(message: types.Message):
 
 @dp.callback_query_handler(lambda c: c.data[:16] == 'escape_agreement')
 async def escape_agreed(call: types.CallbackQuery):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         s, chat_id, child_id, parent_id = call.data.split()
         if call.from_user.id != int(child_id):
             await call.answer('Вы не можете убежать от родителей')

@@ -4,7 +4,7 @@ from aiogram import types
 from aiogram.dispatcher import filters
 
 from configuration import *
-from database.WeddingDatabseManager import DatabaseManager
+from database.WeddingDatabseManager import WeddingDatabaseManager
 from loader import dp, bot
 
 last_time_mentioned = datetime.datetime.min
@@ -14,7 +14,7 @@ last_time_mentioned = datetime.datetime.min
 @dp.message_handler(commands=['mark_all'])
 async def mark_all(message: types.Message):
     global last_time_mentioned
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         users = db_worker.get_users(message.chat.id)

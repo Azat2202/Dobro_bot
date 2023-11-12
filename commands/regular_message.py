@@ -2,15 +2,16 @@ import datetime
 
 from aiogram import types
 
-from database.WeddingDatabseManager import DatabaseManager
+from database.WeddingDatabseManager import WeddingDatabaseManager, WeddingDatabaseManager
 from loader import dp
 
 
 @dp.message_handler()
 async def common_message(message: types.Message):
-    startTime = datetime.datetime.now()
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
+    if message.poll:
+        print(message.poll)
     # tokenized = tokenizer.batch_encode_plus([message.text], max_length=512, pad_to_max_length=True, truncation=True,
     #                                         return_token_type_ids=False)
     # tokens_ids, mask = torch.tensor(tokenized['input_ids']), torch.tensor(tokenized['attention_mask'])

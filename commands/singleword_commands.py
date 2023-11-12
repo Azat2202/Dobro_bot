@@ -4,13 +4,13 @@ from aiogram import types
 from aiogram.dispatcher import filters
 
 from commands.truth_or_dare import get_dare, get_truth
-from database.WeddingDatabseManager import DatabaseManager
+from database.WeddingDatabseManager import WeddingDatabaseManager
 from loader import dp, bot
 
 
 @dp.message_handler(commands='help')
 async def help_(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
     await message.reply("""
 Список всех доступных команд:
@@ -45,34 +45,34 @@ async def help_(message: types.Message):
 
 @dp.message_handler(filters.Text(startswith='Совместимость', ignore_case=True))
 async def connection(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
     await message.reply(f'Ты и {message.text[14::]} вместе с шансом {randint(0, 100)}%')
 
 
 @dp.message_handler(filters.Text(startswith='Вопрос', ignore_case=True))
 async def yn(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
     await message.reply(choice(['Да', "Нет"]))
 
 
 @dp.message_handler(commands='truth')
 async def yn(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
     await message.reply(get_truth())
 
 
 @dp.message_handler(commands='dare')
 async def yn(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
     await message.reply(get_dare())
 
 @dp.message_handler(filters.Text(startswith='Важный вопрос', ignore_case=True))
 async def yn(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
     await message.reply(choice(['Да', "Нет", "Это не важно", "Успокойся", "Не спрашивай такое", "Да, хотя зря",
                                 "Никогда", "100%", "1 из 100", "Спроси еще раз"]))

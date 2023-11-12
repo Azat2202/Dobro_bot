@@ -1,25 +1,15 @@
 import sqlite3
 from datetime import datetime
 
+from database.DatabaseManager import DatabaseManager
 from database.exceptions import *
 
 
-class DatabaseManager:
+class WeddingDatabaseManager(DatabaseManager):
     __db_name = '../resources/wedding_users.db'
 
     def __init__(self):
-        import os.path
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        db_path = os.path.join(base_dir, self.__db_name)
-        self.connection = sqlite3.connect(db_path)
-        self.cursor = self.connection.cursor()
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.close()
-        return
+        super().__init__(self.__db_name)
 
     def is_married(self, user1: int, user2: int, chat_id: int):
         is_first_married = self.cursor.execute('SELECT 1 '
@@ -342,7 +332,3 @@ class DatabaseManager:
         if self.cursor.rowcount > 0:
             self.cursor.execute(f"INSERT OR IGNORE INTO messages VALUES (?, ?, ?, ?)", (user_id, chat_id, 0, 0))
         self.connection.commit()
-
-    def close(self):
-        self.connection.commit()
-        self.connection.close()

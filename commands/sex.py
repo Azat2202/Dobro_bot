@@ -3,13 +3,13 @@ from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils import emoji
 
-from database.WeddingDatabseManager import DatabaseManager
+from database.WeddingDatabseManager import WeddingDatabaseManager
 from loader import dp
 
 
 @dp.message_handler(commands=['my_sex'])
 async def new_sex(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         every = db_worker.sex_count(message.chat.id, message.from_user.id)
@@ -24,7 +24,7 @@ async def new_sex(message: types.Message):
 
 @dp.message_handler(commands=['sex'])
 async def new_sex(message: types.Message):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                               message.from_user.last_name)
         if message.reply_to_message:
@@ -46,7 +46,7 @@ async def new_sex(message: types.Message):
 
 @dp.callback_query_handler(lambda c: c.data[:13] == 'sex_agreement')
 async def agreed(call: types.CallbackQuery):
-    with DatabaseManager() as db_worker:
+    with WeddingDatabaseManager() as db_worker:
         s, chat_id, user_id = call.data.split()
         if call.from_user.id != int(user_id):
             await call.answer('Вы не можете подтвердить секс')
