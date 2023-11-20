@@ -13,3 +13,5 @@ def form_inline_kb(agreement: bool = True, witness: bool = True) -> types.Inline
     if witness:
         inline_wedding_kb.add(inline_wedding_witness)
     return inline_wedding_kb
+
+

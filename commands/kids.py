@@ -8,7 +8,7 @@ from loader import dp
 
 
 @dp.message_handler(commands=['adopt'])
-async def new_sex(message: types.Message):
+async def adopt_command(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
         if message.reply_to_message:
             # В дети нельзя брать себя
@@ -50,7 +50,7 @@ async def new_sex(message: types.Message):
 
 
 @dp.callback_query_handler(lambda c: c.data[:13] == 'child_refusal')
-async def agreed(call: types.CallbackQuery):
+async def adopt_refusal(call: types.CallbackQuery):
     s, chat_id, user_id = call.data.split()
     if call.from_user.id != int(user_id):
         await call.answer('Вы не можете отказаться')
@@ -59,13 +59,14 @@ async def agreed(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(lambda c: c.data[:15] == 'child_agreement')
-async def agreed(call: types.CallbackQuery):
+async def adopt_agreed(call: types.CallbackQuery):
     with WeddingDatabaseManager() as db_worker:
         s, chat_id, user_id = call.data.split()
         if call.from_user.id != int(user_id):
             await call.answer('Вы не можете согласиться')
             return
         parent = call.message.reply_to_message.from_user.id
+        partner = db_worker.get_partner(parent, call.message.chat.id)
         child = call.from_user.id
         # В дети нельзя чужого ребенка
         if db_worker.is_adopted(child, call.message.chat.id):
@@ -78,7 +79,7 @@ async def agreed(call: types.CallbackQuery):
             await call.message.edit_text('Вы не можете брать в дети своих родителей/прародителей итп')
             return
         # В дети нельзя родителей/дедушек итп партнера
-        if db_worker.is_ancestor(parent, child, call.message.chat.id):
+        if db_worker.is_ancestor(partner, child, call.message.chat.id):
             await call.answer('Вы не можете брать в дети родителей/прародителей итп своего партнера')
             await call.message.edit_text('Вы не можете брать в дети родителей/прародителей итп своего партнера')
             return
@@ -106,7 +107,7 @@ async def abandon_kid(message: types.Message):
 
 
 @dp.callback_query_handler(lambda c: c.data[:17] == 'abandon_agreement')
-async def agreed(call: types.CallbackQuery):
+async def abandon_agreed(call: types.CallbackQuery):
     with WeddingDatabaseManager() as db_worker:
         s, chat_id, child_id, parent_id = call.data.split()
         if call.from_user.id != int(parent_id):
@@ -117,7 +118,7 @@ async def agreed(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(lambda c: c.data[:15] == 'abandon_refusal')
-async def agreed(call: types.CallbackQuery):
+async def abandon_refused(call: types.CallbackQuery):
     s, chat_id, child_id, parent_id = call.data.split()
     if call.from_user.id != int(parent_id):
         await call.answer('Вы не можете отказаться')
@@ -126,7 +127,7 @@ async def agreed(call: types.CallbackQuery):
 
 
 @dp.message_handler(commands=['escape'])
-async def abandon_kid(message: types.Message):
+async def escape_kid(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
         res = db_worker.get_parent(message.from_user.id, message.chat.id)
         if not res:

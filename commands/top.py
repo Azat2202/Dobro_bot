@@ -35,7 +35,7 @@ async def spamers_repr(message: types.Message):
 
 @dp.message_handler(commands='top_karma')
 @dp.message_handler(filters.Text(equals='!Карма', ignore_case=True))
-async def spamers_repr(message: types.Message):
+async def karma_repr(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
         data = db_worker.karma_repr(message.chat.id)
     out = 'Топ кармы: \n'

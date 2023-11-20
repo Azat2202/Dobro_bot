@@ -5,7 +5,7 @@ from database.SettingsDatabaseManager import SettingsDatabaseManager
 
 
 @dp.message_handler(commands='settings_poll_creation')
-async def start(message: types.Message):
+async def settings_poll_creation(message: types.Message):
     if not (await bot.get_chat_member(message.chat.id, message.from_user.id)).is_chat_admin():
         await message.reply("Вы не админ чата!")
         return

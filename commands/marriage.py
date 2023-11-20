@@ -98,7 +98,7 @@ async def divorce(message: types.Message):
 
 
 @dp.callback_query_handler(lambda c: c.data[:7] == 'divorce')
-async def agreed(call: types.CallbackQuery):
+async def divorce_agreed(call: types.CallbackQuery):
     with WeddingDatabaseManager() as db_worker:
         s, chat_id, user_id = call.data.split()
         if call.from_user.id != int(user_id):
@@ -109,7 +109,7 @@ async def agreed(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(lambda c: c.data[:11] == 'not_divorce')
-async def agreed(call: types.CallbackQuery):
+async def divorce_refused(call: types.CallbackQuery):
     s, chat_id, user_id = call.data.split()
     if int(user_id) != call.from_user.id:
         await call.answer('Вы не можете отменить развод!')
@@ -119,7 +119,7 @@ async def agreed(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(lambda c: c.data == 'agreement')
-async def agreed(call: types.CallbackQuery):
+async def marriage_agreed(call: types.CallbackQuery):
     with WeddingDatabaseManager() as db_worker:
         try:
             status, user_1, user_2, witness_1, witness_2, user_1_name, user_2_name = db_worker.marriage_agree(
@@ -147,7 +147,7 @@ async def agreed(call: types.CallbackQuery):
 
 
 @dp.callback_query_handler(lambda c: c.data == 'refusal')
-async def refused(call: types.CallbackQuery):
+async def marriage_refused(call: types.CallbackQuery):
     with WeddingDatabaseManager() as db_worker:
         try:
             user1_id, user1_name, user2_id, user2_name = db_worker.marriage_disagree(call.from_user.id,

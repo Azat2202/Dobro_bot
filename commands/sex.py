@@ -7,7 +7,7 @@ from loader import dp
 
 
 @dp.message_handler(commands=['my_sex'])
-async def new_sex(message: types.Message):
+async def sex_repr(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
         every = db_worker.sex_count(message.chat.id, message.from_user.id)
         data = db_worker.get_sex_history(message.chat.id, message.from_user.id)
