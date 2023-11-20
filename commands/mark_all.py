@@ -23,8 +23,8 @@ async def mark_all(message: types.Message):
         last_time_mentioned = now_time
         out += f'{message.from_user.first_name} ОРГАНИЗОВАЛ ВСЕОБЩИЙ СБОР\n'
         for user_id, name, surname in users:
-            out += f'[{name}](tg://user?id={user_id})\n'
-        await bot.send_message(message.chat.id, out, parse_mode='Markdown')
+            out += f'<a href="tg://user?id={user_id}">{name}</a>\n'
+        await bot.send_message(message.chat.id, out)
     else:
         await bot.send_message(message.chat.id,
                                f'До использования команды заново осталось {(wait_seconds_for_mention - delta.seconds) // 3600 + 1} часа')

@@ -22,12 +22,12 @@ async def spamers_repr(message: types.Message):
         elif count > 5_000:
             rank = 'небольшой спамер'
         elif count > 1000:
-            rank = 'рядовой участник'
+            rank = 'обычный участник'
         elif count > 250:
             rank = 'тихоня'
         else:
             rank = 'новичок'
-        out += f'{num}. {rank} {format_name(user[0], user[1])} - {count} сообщений\n'
+        out += f'{num}. {rank} <b>{format_name(user[0], user[1])}</b> - {count} сообщений\n'
         num += 1
     await bot.send_message(message.chat.id, out)
     await bot.delete_message(message.chat.id, message.message_id)
@@ -59,7 +59,7 @@ async def spamers_repr(message: types.Message):
         else:
             rank = 'главный добряш'
 
-        out += f'{num}. {rank} {format_name(user[0], user[1])} - {karma}\n'
+        out += f'{num}. {rank} <b>{format_name(user[0], user[1])}</b> - {karma}\n'
         num += 1
     await bot.send_message(message.chat.id, out)
     await bot.delete_message(message.chat.id, message.message_id)

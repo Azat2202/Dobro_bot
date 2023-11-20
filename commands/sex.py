@@ -1,5 +1,4 @@
 from aiogram import types
-from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils import emoji
 
@@ -22,25 +21,24 @@ async def new_sex(message: types.Message):
 
 @dp.message_handler(commands=['sex'])
 async def new_sex(message: types.Message):
-    with WeddingDatabaseManager() as db_worker:
-        if message.reply_to_message:
-            if message.reply_to_message.from_user.id == message.from_user.id:
-                await message.reply('Вы не можете заняться сексом сами с собой!')
-                return
-            inline_sex_kb = InlineKeyboardMarkup().add(
-                InlineKeyboardButton('Согласен',
-                                     callback_data=f'sex_agreement {message.chat.id} {message.reply_to_message.from_user.id}'),
-                InlineKeyboardButton('Не согласен',
-                                     callback_data=f'sex_refusal {message.chat.id} {message.reply_to_message.from_user.id}')
-            )
-            await message.reply(
-                emoji.emojize(
-                    f'[{message.reply_to_message.from_user.first_name}](tg://user?id={message.reply_to_message.from_user.id}), '
-                    f'[{message.from_user.first_name}](tg://user?id={message.from_user.id}) '
-                    f'предлагает вам секс! Вы согласны? :pleading_face::pleading_face::pleading_face: '),
-                reply_markup=inline_sex_kb, parse_mode='Markdown')
-        else:
-            await message.reply('Чтобы заняться сексом вам необходимо ответить командой на сообщение')
+    if message.reply_to_message:
+        if message.reply_to_message.from_user.id == message.from_user.id:
+            await message.reply('Вы не можете заняться сексом сами с собой!')
+            return
+        inline_sex_kb = InlineKeyboardMarkup().add(
+            InlineKeyboardButton('Согласен',
+                                 callback_data=f'sex_agreement {message.chat.id} {message.reply_to_message.from_user.id}'),
+            InlineKeyboardButton('Не согласен',
+                                 callback_data=f'sex_refusal {message.chat.id} {message.reply_to_message.from_user.id}')
+        )
+        await message.reply(
+            emoji.emojize(
+                f'<a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>'
+                f'<a href="tg://user?id={message.from_user.id}">{message.from_user.first_name}</a>'
+                f'предлагает вам секс! Вы согласны? :pleading_face::pleading_face::pleading_face: '),
+            reply_markup=inline_sex_kb)
+    else:
+        await message.reply('Чтобы заняться сексом вам необходимо ответить командой на сообщение')
 
 
 @dp.callback_query_handler(lambda c: c.data[:13] == 'sex_agreement')

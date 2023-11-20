@@ -1,6 +1,8 @@
 import sqlite3
 from datetime import datetime
 
+from aiogram.utils.markdown import quote_html
+
 from database.DatabaseManager import DatabaseManager
 from database.exceptions import *
 
@@ -328,7 +330,7 @@ class WeddingDatabaseManager(DatabaseManager):
             return ''
 
     def __add_new_user(self, chat_id: int, user_id: int, name: str, surname: str):
-        name = name.replace("[", "{").replace("]", "}")
+        name = quote_html(name)
         self.cursor.execute(f"INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?)", (user_id, name, surname, chat_id))
         if self.cursor.rowcount > 0:
             self.cursor.execute(f"INSERT OR IGNORE INTO messages VALUES (?, ?, ?, ?)", (user_id, chat_id, 0, 0))

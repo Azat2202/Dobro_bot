@@ -27,12 +27,13 @@ async def new_marriage(message: types.Message):
                 return
             sent_msg = await message.reply(
                 emoji.emojize(
-                    f'[{format_name(message.from_user.first_name, message.from_user.last_name)}](tg://user?id={message.reply_to_message.from_user.id}), вы '
-                    f'согласны заключить брак с [{format_name(message.reply_to_message.from_user.first_name, message.reply_to_message.from_user.last_name)}](tg://user?id={message.reply_to_message.from_user.id})?\n '
+                    f'<a href="tg://user?id={message.reply_to_message.from_user.id}">{format_name(message.from_user.first_name, message.from_user.last_name)}</a>, вы '
+                    f'согласны заключить брак с <a href="tg://user?id={message.reply_to_message.from_user.id}">'
+                    f'{format_name(message.reply_to_message.from_user.first_name, message.reply_to_message.from_user.last_name)}</a>?\n '
                     f'Для заключения брака так же необходимы два свидетеля\n'
                     f'Согласие: :cross_mark:\n'
                     f'Первый свидетель: :cross_mark:\n'
-                    f'Второй свидетель: :cross_mark:'), reply_markup=form_inline_kb(), parse_mode='Markdown')
+                    f'Второй свидетель: :cross_mark:'), reply_markup=form_inline_kb())
             db_worker.registrate_new_marriage(message.from_user.id,
                                               message.from_user.first_name,
                                               message.from_user.last_name,
@@ -55,11 +56,11 @@ async def marriages_repr(message: types.Message):
             user1, user1_name, user2, user2_name, witness1_name, witness2_name, marriage_date = line
             num += 1
             time_obj = datetime.now() - datetime.strptime(marriage_date, "%y-%m-%d %H:%M:%S")
-            out += f'{num}. {user1_name} и {user2_name} - {beautiful_time_repr(time_obj)}\n'
+            out += f'{num}. <b>{user1_name}</b> и <b>{user2_name}</b> - {beautiful_time_repr(time_obj)}\n'
         out += f'\nВсего {num} браков'
         if num == 0:
             out = 'В этой группе еще нет ни одного брака!'
-        await message.reply(out, parse_mode='Markdown')
+        await message.reply(out)
 
 
 @dp.message_handler(commands='my_marriage')
@@ -72,13 +73,13 @@ async def my_marriages_repr(message: types.Message):
         user1, user1_name, user2, user2_name, witness1_name, witness2_name, marriage_date, marriage_msg_id = data
         out = f"💝{user1_name} и {user2_name} объединили свои сердца в брак!💝\n"
         date = str(datetime.strptime(marriage_date, '%y-%m-%d %H:%M:%S'))
-        out += f"*Дата:* {date.split()[0]}\n"
-        out += f"*Время:* {date.split()[1]}\n "
+        out += f"<b>Дата:</b> {date.split()[0]}\n"
+        out += f"<b>Время:</b> {date.split()[1]}\n "
         out += '\n'
         out += (f"{witness1_name} и {witness2_name} желают множества счастливых лет вместе, полных любви, радости и "
                 f"взаимопонимания!\n")
-        out += f"[Память об этом дне до сих пор хранится в сообщениях...](https://t.me/{message.chat.username}/{marriage_msg_id})"
-        await message.reply(out, parse_mode='Markdown')
+        out += f'<a href="https://t.me/{message.chat.username}/{marriage_msg_id}">Память об этом дне до сих пор хранится в сообщениях...</a>'
+        await message.reply(out)
 
 
 @dp.message_handler(commands='divorce')
@@ -136,7 +137,7 @@ async def agreed(call: types.CallbackQuery):
                     f'Согласие: :check_mark_button:\n'
                     f'Первый свидетель: {":check_mark_button:" if witness_1 else ":cross_mark:"}\n'
                     f'Второй свидетель: {":check_mark_button:" if witness_2 else ":cross_mark:"})'),
-                    reply_markup=form_inline_kb(agreement=False), parse_mode='Markdown')
+                    reply_markup=form_inline_kb(agreement=False))
         except WrongUserException:
             await call.answer('Вы не можете дать согласие')
         except TimeLimitException:
@@ -158,8 +159,7 @@ async def refused(call: types.CallbackQuery):
         await call.answer("Вы успешно развелись")
         await call.message.edit_reply_markup()
         await call.message.edit_text(
-            f"[{user1_name}](tg://user?id={user1_id}) отказал в браке [{user2_name}](tg://user?id={user2_id})",
-            parse_mode='Markdown')
+            f'<a href="tg://user?id={user1_id}">{user1_name}</a> отказал в браке <a href="tg://user?id={user2_id}">{user2_name}</a>')
 
 
 @dp.callback_query_handler(lambda c: c.data == 'witness')
@@ -172,17 +172,16 @@ async def witness(call: types.CallbackQuery):
             await call.answer("Теперь вы свидетель!")
             if not betrothed:
                 await call.message.edit_text(emoji.emojize(
-                    f'[{user2_name}](tg://user?id={user2}), вы согласны заключить брак с [{user1_name}](tg://user?id={user1})?\n'
+                    f'<a href="tg://user?id={user2}">{user2_name}</a>, '
+                    f'вы согласны заключить брак с <a href="tg://user?id={user1}">{user1_name}</a>?\n'
                     f'Для заключения брака так же необходимы два свидетеля\n'
                     f'Согласие: {":check_mark_button:" if agreed else ":cross_mark:"}\n'
                     f'Первый свидетель: :check_mark_button:\n'
                     f'Второй свидетель: {":check_mark_button:" if two_witnesses else ":cross_mark:"}'),
-                    reply_markup=form_inline_kb(agreement=not agreed),
-                    parse_mode='Markdown')
+                    reply_markup=form_inline_kb(agreement=not agreed))
             else:
                 await call.message.edit_text(
-                    f"Поздравляем молодоженов! [{user1_name}](tg://user?id={user1}) и [{user2_name}](tg://user?id={user2_name}) теперь в браке!",
-                    parse_mode='Markdown')
+                    f'Поздравляем молодоженов! <a href="tg://user?id={user1}">{user1_name}</a> и <a href="tg://user?id={user2}">{user2_name}</a> теперь в браке!')
         except WrongUserException:
             await call.answer('Вы не можете стать свидетелем!')
         except TimeLimitException:

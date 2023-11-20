@@ -24,8 +24,8 @@ async def solo_horo(message: types.Message):
         last_time_horo = now_time
         for user_id, name, surname in users:
             today_horo = get_wish(users)
-            out += f'{name}{today_horo}\n'
-        await bot.send_message(message.chat.id, out, parse_mode='Markdown', reply_to_message_id=message.message_id)
+            out += f'<b>{name}</b>{today_horo}\n'
+        await bot.send_message(message.chat.id, out, reply_to_message_id=message.message_id)
     else:
         await bot.send_message(message.chat.id,
                                f'До использования команды заново осталось {(wait_seconds_for_horo - delta.seconds) // 3600} часов')

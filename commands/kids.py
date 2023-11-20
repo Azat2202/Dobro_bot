@@ -42,9 +42,9 @@ async def new_sex(message: types.Message):
             )
             await message.reply(
                 emoji.emojize(
-                    f'[{message.reply_to_message.from_user.first_name}](tg://user?id={message.reply_to_message.from_user.id}), вы хотите стать ребенком '
-                    f'[{message.from_user.first_name}](tg://user?id={message.from_user.id})?'
-                    f':pleading_face::pleading_face::pleading_face:'), reply_markup=inline_child_kb, parse_mode='Markdown')
+                    f'<a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>, вы хотите стать ребенком '
+                    f'<a href="tg://user?id={message.from_user.id}">{message.from_user.first_name}</a>?'
+                    f':pleading_face::pleading_face::pleading_face:'), reply_markup=inline_child_kb)
         else:
             await message.reply('Чтобы завести детей вам нужно ответить командной на сообщение')
 
