@@ -101,6 +101,19 @@ class WeddingDatabaseManager(DatabaseManager):
         WHERE parent = ? AND child = ? and chat_id = ?""", (parent_id, child_id, chat_id))
         self.connection.commit()
 
+    def move_child(self, parent_id: int, new_parent_id: int, chat_id: int):
+        self.cursor.execute("""
+        UPDATE children
+        SET parent=?
+        WHERE parent=? AND chat_id=?""", (new_parent_id, parent_id, chat_id))
+        self.connection.commit()
+
+    def get_children(self, parent_id: int, chat_id: int):
+        return self.cursor.execute("""
+        SELECT child
+        FROM children
+        WHERE parent = ? AND chat_id = ?""", (parent_id, chat_id)).fetchall()
+
     def get_edges(self, chat_id: int):
         return self.cursor.execute("""
                             SELECT pr_name.name, ch_name.name
@@ -113,30 +126,30 @@ class WeddingDatabaseManager(DatabaseManager):
                                    {'chat_id': chat_id}).fetchall()
 
     def inc_message(self, user_id: int, chat_id: int, first_name: str, last_name: str):
-        self.__add_new_user(chat_id, user_id, first_name, last_name)
+        self.add_new_user(chat_id, user_id, first_name, last_name)
         count = self.cursor.execute("UPDATE messages "
-                            "SET message_count = message_count + 1 "
-                            "WHERE user_id = (?) AND chat_id = (?) "
-                            "RETURNING message_count ", (user_id, chat_id)).fetchone()[0]
-        self.__add_new_user(chat_id, user_id, first_name, last_name)
+                                    "SET message_count = message_count + 1 "
+                                    "WHERE user_id = (?) AND chat_id = (?) "
+                                    "RETURNING message_count ", (user_id, chat_id)).fetchone()[0]
+        self.add_new_user(chat_id, user_id, first_name, last_name)
         self.connection.commit()
         return count
 
     def inc_karma(self, user_id: int, chat_id: int):
         karma = self.cursor.execute("UPDATE messages "
-                            "SET karma = karma + 1 "
-                            "WHERE user_id = (?) AND chat_id = (?) "
-                            "RETURNING karma;",
-                            (user_id, chat_id)).fetchone()[0]
+                                    "SET karma = karma + 1 "
+                                    "WHERE user_id = (?) AND chat_id = (?) "
+                                    "RETURNING karma;",
+                                    (user_id, chat_id)).fetchone()[0]
         self.connection.commit()
         return karma
 
     def dec_karma(self, user_id: int, chat_id: int):
         karma = self.cursor.execute("UPDATE messages "
-                            "SET karma = karma - 1 "
-                            "WHERE user_id = (?) AND chat_id = (?) "
-                            "RETURNING karma",
-                            (user_id, chat_id)).fetchone()[0]
+                                    "SET karma = karma - 1 "
+                                    "WHERE user_id = (?) AND chat_id = (?) "
+                                    "RETURNING karma",
+                                    (user_id, chat_id)).fetchone()[0]
         self.connection.commit()
         return karma
 
@@ -204,8 +217,8 @@ class WeddingDatabaseManager(DatabaseManager):
                              datetime.now().strftime("%y-%m-%d %H:%M:%S"),
                              chat_id,
                              message_id))
-        self.__add_new_user(chat_id, user1_id, user1_name, user1_surname)
-        self.__add_new_user(chat_id, user2_id, user2_name, user2_surname)
+        self.add_new_user(chat_id, user1_id, user1_name, user1_surname)
+        self.add_new_user(chat_id, user2_id, user2_name, user2_surname)
         self.connection.commit()
 
     def marriage_agree(self, user_id: int, chat_id: int, message_id: int):
@@ -281,7 +294,7 @@ class WeddingDatabaseManager(DatabaseManager):
             return (agreed and bool(witness1)), agreed, bool(witness1), user1, self.__get_name(
                 user1), user2, self.__get_name(user2)
 
-    def get_my_marriage(self, user_id:int, chat_id: int):
+    def get_my_marriage(self, user_id: int, chat_id: int):
         return self.cursor.execute("""
         SELECT user_1.id, user_1.name, user_2.id, user_2.name, witness_1.name, witness_2.name, marriages.date, marriages.message_id
         FROM marriages
@@ -335,7 +348,7 @@ class WeddingDatabaseManager(DatabaseManager):
         else:
             return ''
 
-    def __add_new_user(self, chat_id: int, user_id: int, name: str, surname: str):
+    def add_new_user(self, chat_id: int, user_id: int, name: str, surname: str):
         name = quote_html(name)
         self.cursor.execute(f"INSERT OR IGNORE INTO users VALUES (?, ?, ?, ?)", (user_id, name, surname, chat_id))
         if self.cursor.rowcount > 0:

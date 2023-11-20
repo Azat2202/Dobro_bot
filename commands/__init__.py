@@ -12,6 +12,7 @@ from . import kids
 from . import family
 from . import start
 from . import settings
+from . import user_leave
 
 
 from . import regular_message
