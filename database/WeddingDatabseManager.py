@@ -121,18 +121,22 @@ class WeddingDatabaseManager(DatabaseManager):
         self.connection.commit()
 
     def inc_karma(self, user_id: int, chat_id: int):
-        self.cursor.execute("UPDATE messages "
+        karma = self.cursor.execute("UPDATE messages "
                             "SET karma = karma + 1 "
-                            "WHERE user_id = (?) AND chat_id = (?)",
-                            (user_id, chat_id))
+                            "WHERE user_id = (?) AND chat_id = (?) "
+                            "RETURNING karma;",
+                            (user_id, chat_id)).fetchone()[0]
         self.connection.commit()
+        return karma
 
     def dec_karma(self, user_id: int, chat_id: int):
-        self.cursor.execute("UPDATE messages "
+        karma = self.cursor.execute("UPDATE messages "
                             "SET karma = karma - 1 "
-                            "WHERE user_id = (?) AND chat_id = (?)",
-                            (user_id, chat_id))
+                            "WHERE user_id = (?) AND chat_id = (?) "
+                            "RETURNING karma",
+                            (user_id, chat_id)).fetchone()[0]
         self.connection.commit()
+        return karma
 
     def add_sex(self, user1: int, user2: int, chat_id: int):
         self.cursor.execute("INSERT INTO sex (chat_id, user1, user2)"
