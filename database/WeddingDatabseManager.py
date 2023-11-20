@@ -336,7 +336,7 @@ class WeddingDatabaseManager(DatabaseManager):
             raise WrongUserException
         return data
 
-    def del_marriage(self, chat_id: int, user_id: int):
+    def divorce(self, user_id: int, chat_id: int):
         self.cursor.execute("DELETE FROM marriages WHERE chat_id = (?) AND (user1 = (?) OR user2 = (?))",
                             (chat_id, user_id, user_id))
         self.connection.commit()

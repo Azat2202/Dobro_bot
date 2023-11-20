@@ -21,5 +21,5 @@ async def user_left_chat(message: types.Message):
                 for child in children:
                     db_worker.remove_child(message.left_chat_member.id, child, message.chat.id)
                 main_message = "Все дети оказались в детдоме(!"
-    await message.reply(f"Прощайте, {message.left_chat_member.first_name}\n" + main_message)
-
+        db_worker.divorce(message.left_chat_member.id, message.chat.id)
+    await message.reply(f"Прощайте, {message.left_chat_member.first_name}\n" + main_message + "\nВы разведены!")

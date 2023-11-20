@@ -104,7 +104,7 @@ async def divorce_agreed(call: types.CallbackQuery):
         if call.from_user.id != int(user_id):
             await call.answer('Вы не можете подтвердить развод')
             return
-        db_worker.del_marriage(chat_id, user_id)
+        db_worker.divorce(user_id, chat_id)
         await call.message.edit_text("Вы развелись")
 
 
