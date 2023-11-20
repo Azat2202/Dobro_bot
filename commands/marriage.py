@@ -15,8 +15,6 @@ from utility import format_name, beautiful_time_repr
 @dp.message_handler(commands=['marry'])
 async def new_marriage(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         if message.reply_to_message:
             if db_worker.get_partner(message.from_user.id, message.chat.id):
                 await message.reply('Вы уже состоите в браке!')
@@ -50,8 +48,6 @@ async def new_marriage(message: types.Message):
 @dp.message_handler(commands='marriages')
 async def marriages_repr(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         data = db_worker.get_marriages(message.chat.id)
         out = 'Статистика по бракам:\n'
         num = 0
@@ -69,8 +65,6 @@ async def marriages_repr(message: types.Message):
 @dp.message_handler(commands='my_marriage')
 async def my_marriages_repr(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         data = db_worker.get_my_marriage(message.from_user.id, message.chat.id)
         if not data:
             await message.reply("Вы еще не в браке(")
@@ -90,8 +84,6 @@ async def my_marriages_repr(message: types.Message):
 @dp.message_handler(commands='divorce')
 async def divorce(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         try:
             db_worker.request_divorce(message.from_user.id, message.chat.id)
             inline_divorce_agreement = InlineKeyboardButton('Да',

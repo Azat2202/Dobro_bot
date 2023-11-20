@@ -10,8 +10,6 @@ from loader import dp
 @dp.message_handler(commands=['my_sex'])
 async def new_sex(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         every = db_worker.sex_count(message.chat.id, message.from_user.id)
         data = db_worker.get_sex_history(message.chat.id, message.from_user.id)
         if every == 0:
@@ -25,21 +23,22 @@ async def new_sex(message: types.Message):
 @dp.message_handler(commands=['sex'])
 async def new_sex(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         if message.reply_to_message:
             if message.reply_to_message.from_user.id == message.from_user.id:
                 await message.reply('Вы не можете заняться сексом сами с собой!')
                 return
             inline_sex_kb = InlineKeyboardMarkup().add(
-                InlineKeyboardButton('Согласен', callback_data=f'sex_agreement {message.chat.id} {message.reply_to_message.from_user.id}'),
-                InlineKeyboardButton('Не согласен', callback_data=f'sex_refusal {message.chat.id} {message.reply_to_message.from_user.id}')
+                InlineKeyboardButton('Согласен',
+                                     callback_data=f'sex_agreement {message.chat.id} {message.reply_to_message.from_user.id}'),
+                InlineKeyboardButton('Не согласен',
+                                     callback_data=f'sex_refusal {message.chat.id} {message.reply_to_message.from_user.id}')
             )
             await message.reply(
                 emoji.emojize(
                     f'[{message.reply_to_message.from_user.first_name}](tg://user?id={message.reply_to_message.from_user.id}), '
                     f'[{message.from_user.first_name}](tg://user?id={message.from_user.id}) '
-                    f'предлагает вам секс! Вы согласны? :pleading_face::pleading_face::pleading_face: '), reply_markup=inline_sex_kb, parse_mode='Markdown')
+                    f'предлагает вам секс! Вы согласны? :pleading_face::pleading_face::pleading_face: '),
+                reply_markup=inline_sex_kb, parse_mode='Markdown')
         else:
             await message.reply('Чтобы заняться сексом вам необходимо ответить командой на сообщение')
 
@@ -52,9 +51,11 @@ async def agreed(call: types.CallbackQuery):
             await call.answer('Вы не можете подтвердить секс')
             return
         db_worker.add_sex(call.message.reply_to_message.from_user.id, call.from_user.id, call.message.chat.id)
-        await call.message.edit_text(emoji.emojize(f"{call.message.reply_to_message.from_user.first_name} и {call.from_user.first_name} занялись "
-                                     f"сексом "
-                                     f":smiling_face_with_horns::smiling_face_with_horns::smiling_face_with_horns:"))
+        await call.message.edit_text(emoji.emojize(
+            f"{call.message.reply_to_message.from_user.first_name} и {call.from_user.first_name} занялись "
+            f"сексом "
+            f":smiling_face_with_horns::smiling_face_with_horns::smiling_face_with_horns:"))
+
 
 @dp.callback_query_handler(lambda c: c.data[:11] == 'sex_refusal')
 async def agreed(call: types.CallbackQuery):
@@ -62,7 +63,5 @@ async def agreed(call: types.CallbackQuery):
     if call.from_user.id != int(user_id):
         await call.answer('Вы не можете отклонить секс')
         return
-    await call.message.edit_text(emoji.emojize(f"{call.from_user.first_name} отказал {call.message.reply_to_message.from_user.first_name} :sad_but_relieved_face:"))
-
-
-
+    await call.message.edit_text(emoji.emojize(
+        f"{call.from_user.first_name} отказал {call.message.reply_to_message.from_user.first_name} :sad_but_relieved_face:"))

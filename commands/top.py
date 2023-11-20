@@ -10,7 +10,6 @@ from utility import format_name
 @dp.message_handler(filters.Text(equals='!Спамеры', ignore_case=True))
 async def spamers_repr(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
         data = db_worker.get_messages(message.chat.id)
     out = 'Топ пользователей по написанным сообщениям: \n'
     num = 1
@@ -38,7 +37,6 @@ async def spamers_repr(message: types.Message):
 @dp.message_handler(filters.Text(equals='!Карма', ignore_case=True))
 async def spamers_repr(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name, message.from_user.last_name)
         data = db_worker.karma_repr(message.chat.id)
     out = 'Топ кармы: \n'
     num = 1

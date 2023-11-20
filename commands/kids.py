@@ -10,8 +10,6 @@ from loader import dp
 @dp.message_handler(commands=['adopt'])
 async def new_sex(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         if message.reply_to_message:
             # В дети нельзя брать себя
             if message.reply_to_message.from_user.id == message.from_user.id:
@@ -92,8 +90,6 @@ async def agreed(call: types.CallbackQuery):
 @dp.message_handler(commands=['abandon'])
 async def abandon_kid(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         if message.reply_to_message:
             if not db_worker.is_parent(message.from_user.id, message.reply_to_message.from_user.id, message.chat.id):
                 await message.reply("Это не ваш ребенок!")
@@ -132,8 +128,6 @@ async def agreed(call: types.CallbackQuery):
 @dp.message_handler(commands=['escape'])
 async def abandon_kid(message: types.Message):
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         res = db_worker.get_parent(message.from_user.id, message.chat.id)
         if not res:
             await message.reply("У вас нет родителей!")

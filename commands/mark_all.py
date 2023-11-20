@@ -15,8 +15,6 @@ last_time_mentioned = datetime.datetime.min
 async def mark_all(message: types.Message):
     global last_time_mentioned
     with WeddingDatabaseManager() as db_worker:
-        db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
-                              message.from_user.last_name)
         users = db_worker.get_users(message.chat.id)
     now_time = datetime.datetime.now()
     delta = now_time - last_time_mentioned
@@ -25,7 +23,6 @@ async def mark_all(message: types.Message):
         last_time_mentioned = now_time
         out += f'{message.from_user.first_name} ОРГАНИЗОВАЛ ВСЕОБЩИЙ СБОР\n'
         for user_id, name, surname in users:
-            backslash = "\\"
             out += f'[{name}](tg://user?id={user_id})\n'
         await bot.send_message(message.chat.id, out, parse_mode='Markdown')
     else:
