@@ -12,3 +12,6 @@ from . import kids
 from . import family
 from . import start
 from . import settings
+
+
+from . import regular_message

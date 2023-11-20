@@ -114,11 +114,13 @@ class WeddingDatabaseManager(DatabaseManager):
 
     def inc_message(self, user_id: int, chat_id: int, first_name: str, last_name: str):
         self.__add_new_user(chat_id, user_id, first_name, last_name)
-        self.cursor.execute("UPDATE messages "
+        count = self.cursor.execute("UPDATE messages "
                             "SET message_count = message_count + 1 "
-                            "WHERE user_id = (?) AND chat_id = (?)", (user_id, chat_id))
+                            "WHERE user_id = (?) AND chat_id = (?) "
+                            "RETURNING message_count ", (user_id, chat_id)).fetchone()[0]
         self.__add_new_user(chat_id, user_id, first_name, last_name)
         self.connection.commit()
+        return count
 
     def inc_karma(self, user_id: int, chat_id: int):
         karma = self.cursor.execute("UPDATE messages "

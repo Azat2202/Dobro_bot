@@ -33,8 +33,8 @@ async def new_sex(message: types.Message):
         )
         await message.reply(
             emoji.emojize(
-                f'<a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>'
-                f'<a href="tg://user?id={message.from_user.id}">{message.from_user.first_name}</a>'
+                f'<a href="tg://user?id={message.reply_to_message.from_user.id}">{message.reply_to_message.from_user.first_name}</a>, '
+                f'<a href="tg://user?id={message.from_user.id}">{message.from_user.first_name}</a> '
                 f'предлагает вам секс! Вы согласны? :pleading_face::pleading_face::pleading_face: '),
             reply_markup=inline_sex_kb)
     else:
