@@ -7,7 +7,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from commands.truth_or_dare import get_wish, get_next_day_horo
 from configuration import *
-from database.WeddingDatabseManager import WeddingDatabaseManager
+from database.UsersDatabaseManager import UsersDatabaseManager
 from loader import dp, bot
 
 last_time_horo = datetime.datetime.now() - datetime.timedelta(days=1)
@@ -16,7 +16,7 @@ last_time_horo = datetime.datetime.now() - datetime.timedelta(days=1)
 @dp.message_handler(commands=['horo_for_all'])
 async def all_horo(message: types.Message):
     global last_time_horo
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         users = db_worker.get_users(message.chat.id)
     now_time = datetime.datetime.now()
     delta = now_time - last_time_horo
@@ -37,7 +37,7 @@ async def all_horo(message: types.Message):
 async def solo_horo(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
     inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'horo_update {message.from_user.id}'))
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         today_horo = get_wish(db_worker.get_users(message.chat.id))
     if by_command:
         out = f'{message.from_user.first_name}{today_horo}'

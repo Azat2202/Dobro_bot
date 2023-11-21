@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher import filters
 
-from database.WeddingDatabseManager import WeddingDatabaseManager
+from database.UsersDatabaseManager import UsersDatabaseManager
 from loader import dp
 
 
@@ -10,7 +10,7 @@ from loader import dp
 @dp.message_handler(filters.Text(startswith='плюс', ignore_case=True))
 @dp.message_handler(filters.Text(startswith='спасибо', ignore_case=True))
 async def plus_karma(message: types.Message):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         if message.reply_to_message:
             if message.reply_to_message.from_user.id == message.from_user.id:
                 await message.reply('Нельзя изменять карму себе')
@@ -28,7 +28,7 @@ async def plus_karma(message: types.Message):
 @dp.message_handler(filters.Text(equals='минус', ignore_case=True))
 @dp.message_handler(filters.Text(equals='токс', ignore_case=True))
 async def minus_karma(message: types.Message):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         if message.reply_to_message:
             if message.reply_to_message.from_user.id == message.from_user.id:
                 await message.reply('Нельзя изменять карму себе')

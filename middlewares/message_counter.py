@@ -1,6 +1,6 @@
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
-from database.WeddingDatabseManager import WeddingDatabaseManager
+from database.UsersDatabaseManager import UsersDatabaseManager
 from utility import rank_degrees
 
 
@@ -9,7 +9,7 @@ class MessageCounter(BaseMiddleware):
         super(MessageCounter, self).__init__()
 
     async def on_process_message(self, message: types.Message, data: dict):
-        with WeddingDatabaseManager() as db_worker:
+        with UsersDatabaseManager() as db_worker:
             count = db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                                   message.from_user.last_name)
             if count in rank_degrees.keys():

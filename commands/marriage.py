@@ -6,7 +6,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils import emoji
 
 from commands.inlineKeyboards import form_inline_kb
-from database.WeddingDatabseManager import WeddingDatabaseManager
+from database.UsersDatabaseManager import UsersDatabaseManager
 from database.exceptions import *
 from loader import dp
 from utility import format_name, beautiful_time_repr
@@ -14,7 +14,7 @@ from utility import format_name, beautiful_time_repr
 
 @dp.message_handler(commands=['marry'])
 async def new_marriage(message: types.Message):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         if message.reply_to_message:
             if db_worker.get_partner(message.from_user.id, message.chat.id):
                 await message.reply('Вы уже состоите в браке!')
@@ -48,7 +48,7 @@ async def new_marriage(message: types.Message):
 
 @dp.message_handler(commands='marriages')
 async def marriages_repr(message: types.Message):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         data = db_worker.get_marriages(message.chat.id)
         out = 'Статистика по бракам:\n'
         num = 0
@@ -65,7 +65,7 @@ async def marriages_repr(message: types.Message):
 
 @dp.message_handler(commands='my_marriage')
 async def my_marriages_repr(message: types.Message):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         data = db_worker.get_my_marriage(message.from_user.id, message.chat.id)
         if not data:
             await message.reply("Вы еще не в браке(")
@@ -84,7 +84,7 @@ async def my_marriages_repr(message: types.Message):
 
 @dp.message_handler(commands='divorce')
 async def divorce(message: types.Message):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         try:
             db_worker.request_divorce(message.from_user.id, message.chat.id)
             inline_divorce_agreement = InlineKeyboardButton('Да',
@@ -99,7 +99,7 @@ async def divorce(message: types.Message):
 
 @dp.callback_query_handler(lambda c: c.data[:7] == 'divorce')
 async def divorce_agreed(call: types.CallbackQuery):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         s, chat_id, user_id = call.data.split()
         if call.from_user.id != int(user_id):
             await call.answer('Вы не можете подтвердить развод')
@@ -120,7 +120,7 @@ async def divorce_refused(call: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda c: c.data == 'agreement')
 async def marriage_agreed(call: types.CallbackQuery):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         try:
             status, user_1, user_2, witness_1, witness_2, user_1_name, user_2_name = db_worker.marriage_agree(
                 call.from_user.id,
@@ -148,7 +148,7 @@ async def marriage_agreed(call: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda c: c.data == 'refusal')
 async def marriage_refused(call: types.CallbackQuery):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         try:
             user1_id, user1_name, user2_id, user2_name = db_worker.marriage_disagree(call.from_user.id,
                                                                                      call.message.chat.id,
@@ -164,7 +164,7 @@ async def marriage_refused(call: types.CallbackQuery):
 
 @dp.callback_query_handler(lambda c: c.data == 'witness')
 async def witness(call: types.CallbackQuery):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         try:
             data = db_worker.marriage_witness(
                 call.from_user.id, call.message.chat.id, call.message.message_id)

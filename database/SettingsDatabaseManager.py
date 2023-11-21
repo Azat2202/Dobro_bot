@@ -15,7 +15,13 @@ class SettingsDatabaseManager(DatabaseManager):
         self.connection.commit()
 
     def get_poll_parameter(self, chat_id: int) -> bool:
-        return self.cursor.execute("""
+        result = self.cursor.execute("""
+        SELECT send_poll FROM chats WHERE chat_id = ?""", (chat_id, )).fetchone()
+        if result:
+            return result[0] == 1
+        else:
+            self.add_chat(chat_id)
+            return self.cursor.execute("""
         SELECT send_poll FROM chats WHERE chat_id = ?""", (chat_id, )).fetchone()[0] == 1
 
     def change_poll_parameter(self, chat_id) -> bool:

@@ -2,17 +2,17 @@ from aiogram import types
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils import emoji
 
-from database.WeddingDatabseManager import WeddingDatabaseManager
+from database.UsersDatabaseManager import UsersDatabaseManager
 from loader import dp
 
 
 @dp.message_handler(commands=['my_sex'])
 async def sex_repr(message: types.Message):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         every = db_worker.sex_count(message.chat.id, message.from_user.id)
         data = db_worker.get_sex_history(message.chat.id, message.from_user.id)
         if every == 0:
-            await message.reply("У вас пока еще не было секса но не отчаивайтесь!")
+            await message.reply("У вас пока еще не было секса, но не отчаивайтесь!")
         else:
             await message.reply(f"Секс у вас был {every} раз с {len(data)} партнерами\n"
                                 f"Наиболее популярные: \n"
@@ -43,7 +43,7 @@ async def new_sex(message: types.Message):
 
 @dp.callback_query_handler(lambda c: c.data[:13] == 'sex_agreement')
 async def agreed(call: types.CallbackQuery):
-    with WeddingDatabaseManager() as db_worker:
+    with UsersDatabaseManager() as db_worker:
         s, chat_id, user_id = call.data.split()
         if call.from_user.id != int(user_id):
             await call.answer('Вы не можете подтвердить секс')

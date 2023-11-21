@@ -5,7 +5,7 @@ from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from commands.truth_or_dare import get_dare, get_truth
-from database.WeddingDatabseManager import WeddingDatabaseManager
+from database.UsersDatabaseManager import UsersDatabaseManager
 from loader import dp, bot
 
 

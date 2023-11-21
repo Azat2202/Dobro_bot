@@ -7,11 +7,23 @@ from database.DatabaseManager import DatabaseManager
 from database.exceptions import *
 
 
-class WeddingDatabaseManager(DatabaseManager):
+class UsersDatabaseManager(DatabaseManager):
     __db_name = '../resources/wedding_users.db'
 
     def __init__(self):
         super().__init__(self.__db_name)
+
+    def add_poll_answer(self, user_id: int, poll_id: int, option_id: int):
+        self.cursor.execute("""
+        INSERT INTO poll_answers(user_id, poll_id, option_id)
+        VALUES  (?, ?, ?)""", (user_id, poll_id, option_id))
+        self.connection.commit()
+
+    def remove_poll_anser(self, user_id: int, poll_id: int):
+        self.cursor.execute("""
+        DELETE FROM poll_answers
+        WHERE user_id = ? AND poll_id = ?""", (user_id, poll_id))
+        self.connection.commit()
 
     def is_married(self, user1: int, user2: int, chat_id: int):
         is_first_married = self.cursor.execute('SELECT 1 '
