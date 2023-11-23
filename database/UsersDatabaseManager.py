@@ -25,6 +25,30 @@ class UsersDatabaseManager(DatabaseManager):
         WHERE user_id = ? AND poll_id = ?""", (user_id, poll_id))
         self.connection.commit()
 
+
+    def get_user_mood(self, user_id: int, chat_id: int):
+        return self.cursor.execute("""
+        SELECT user_mood.date, user_mood.mood, avg_mood.mood
+        FROM (
+            SELECT date, (3 - option_id) as "mood"
+            FROM poll_answers
+                   JOIN created_polls
+                        ON poll_answers.poll_id = created_polls.poll_id
+            WHERE chat_id = :chat_id
+            AND user_id = :user_id
+        ) AS user_mood
+        JOIN (
+            SELECT date, (3 - AVG(option_id)) as "mood"
+            FROM poll_answers
+            JOIN created_polls
+                ON poll_answers.poll_id = created_polls.poll_id
+            WHERE chat_id = :chat_id
+            GROUP BY date
+        ) AS avg_mood
+        ON user_mood.date = avg_mood.date
+        ORDER BY CAST(SUBSTR(user_mood.date, 4, 2) AS INTEGER), CAST(SUBSTR(user_mood.date, 1, 2) AS INTEGER);""",
+                                   {'user_id': user_id, 'chat_id': chat_id}).fetchall()
+
     def is_married(self, user1: int, user2: int, chat_id: int):
         is_first_married = self.cursor.execute('SELECT 1 '
                                                'FROM marriages '
