@@ -13,6 +13,11 @@ class UsersDatabaseManager(DatabaseManager):
     def __init__(self):
         super().__init__(self.__db_name)
 
+    def add_poll(self, chat_id: int, poll_id: int, date: str):
+        self.cursor.execute("""
+        INSERT INTO created_polls(chat_id, poll_id, "date")
+        VALUES (?, ?, ?)""", (chat_id, poll_id, date))
+
     def add_poll_answer(self, user_id: int, poll_id: int, option_id: int):
         self.cursor.execute("""
         INSERT INTO poll_answers(user_id, poll_id, option_id)
