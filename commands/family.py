@@ -17,7 +17,8 @@ async def family_repr(message: types.Message):
         marriages = [[data[1], data[3]] for data in db_worker.get_marriages(message.chat.id)]
         nodes = [item for sublist in marriages for item in sublist] + [item for sublist in edges for item in sublist]
         make_graph(nodes, edges, marriages, message.chat.full_name, f"for_{message.from_user.id}")
-        await message.reply_photo(InputFile(os.path.join("..", "graphs", f"for_{message.from_user.id}.png")))
+        with open(os.path.join("..", "graphs", f"for_{message.from_user.id}.png"), 'rb') as inp_f:
+            await message.reply_photo(inp_f)
         os.remove(os.path.join("..", "graphs", f"for_{message.from_user.id}"))
         os.remove(os.path.join("..", "graphs", f"for_{message.from_user.id}.png"))
 
