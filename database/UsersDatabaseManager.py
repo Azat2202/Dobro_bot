@@ -13,10 +13,18 @@ class UsersDatabaseManager(DatabaseManager):
     def __init__(self):
         super().__init__(self.__db_name)
 
-    def add_poll(self, chat_id: int, poll_id: int, date: str):
+    def get_last_poll(self, chat_id: int):
+        return self.cursor.execute("""
+        SELECT message_id
+        FROM created_polls
+        WHERE chat_id= ? 
+        ORDER BY CAST(SUBSTR(date, 4, 2) AS INTEGER) DESC , CAST(SUBSTR(date, 1, 2) AS INTEGER) DESC;""",
+                                   (chat_id, )).fetchone()
+
+    def add_poll(self, chat_id: int, poll_id: int, date: str, message_id: int):
         self.cursor.execute("""
-        INSERT INTO created_polls(chat_id, poll_id, "date")
-        VALUES (?, ?, ?)""", (chat_id, poll_id, date))
+        INSERT INTO created_polls(chat_id, poll_id, "date", "message_id")
+        VALUES (?, ?, ?, ?)""", (chat_id, poll_id, date, message_id))
 
     def add_poll_answer(self, user_id: int, poll_id: int, option_id: int):
         self.cursor.execute("""
@@ -71,7 +79,8 @@ class UsersDatabaseManager(DatabaseManager):
         data = self.cursor.execute("""
                             SELECT user1, user2
                             FROM marriages
-                            WHERE (marriages.user1=? or marriages.user2=?) and chat_id = ?;""",
+                            WHERE (marriages.user1=? or marriages.user2=?) and chat_id = ?
+                            AND betrothed = 1;""",
                                    (user_id, user_id, chat_id)).fetchone()
         if not data:
             return None

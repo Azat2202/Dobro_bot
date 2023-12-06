@@ -9,7 +9,8 @@ from loader import dp, bot
 @dp.message_handler(commands='anek')
 async def anek(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
-    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'anek_update {message.from_user.id}'))
+    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'anek_update {message.from_user.id}'),
+                  InlineKeyboardButton('✅', callback_data=f'remove_markup {message.from_user.id}'))
     anek_url = 'https://baneks.ru/random'
     response = requests.get(anek_url)
     soup = BeautifulSoup(response.text, 'lxml')

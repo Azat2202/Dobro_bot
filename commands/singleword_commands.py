@@ -56,7 +56,8 @@ async def yn(message: types.Message):
 @dp.message_handler(commands='truth')
 async def truth(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
-    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'truth_update {message.from_user.id}'))
+    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'truth_update {message.from_user.id}'),
+                  InlineKeyboardButton('✅', callback_data=f'remove_markup {message.from_user.id}'))
     if by_command:
         await message.reply(get_truth(), reply_markup=inline_kb)
     else:
@@ -72,10 +73,20 @@ async def marriage_refused(call: types.CallbackQuery):
         await call.answer()
 
 
+@dp.callback_query_handler(lambda c: c.data[:13] == 'remove_markup')
+async def marriage_refused(call: types.CallbackQuery):
+    if call.from_user.id != int(call.data.split()[1]):
+        await call.answer("Вы не можете подтвердить выбор!")
+    else:
+        await call.message.edit_reply_markup(reply_markup=None)
+        await call.answer()
+
+
 @dp.message_handler(commands='dare')
 async def dare(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
-    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'dare_update {message.from_user.id}'))
+    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'dare_update {message.from_user.id}'),
+                  InlineKeyboardButton('✅', callback_data=f'remove_markup {message.from_user.id}'))
     if by_command:
         await message.reply(get_dare(), reply_markup=inline_kb)
     else:

@@ -36,7 +36,8 @@ async def all_horo(message: types.Message):
 @dp.message_handler(commands=['horo'])
 async def solo_horo(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
-    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'horo_update {message.from_user.id}'))
+    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'horo_update {message.from_user.id}'),
+                  InlineKeyboardButton('✅', callback_data=f'remove_markup {message.from_user.id}'))
     with UsersDatabaseManager() as db_worker:
         today_horo = get_wish(db_worker.get_users(message.chat.id))
     if by_command:
@@ -61,7 +62,8 @@ async def marriage_refused(call: types.CallbackQuery):
 @dp.message_handler(commands=['wish'])
 async def solo_wish(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
-    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'solo_wish_update {message.from_user.id}'))
+    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'solo_wish_update {message.from_user.id}'),
+                  InlineKeyboardButton('✅', callback_data=f'remove_markup {message.from_user.id}'))
     today_horo = get_next_day_horo()
     if by_command:
         out = f'{message.from_user.first_name}, {today_horo}'
