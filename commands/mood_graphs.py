@@ -44,4 +44,4 @@ async def my_mood(message: types.Message):
     path = os.path.join('graphs', f'mood_{message.from_user.id}_{message.chat.id}.png')
     with open(path, 'rb') as inp_f:
         await message.reply_photo(inp_f)
-    os.remove(path)
+    # os.remove(path)
