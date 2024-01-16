@@ -20,7 +20,7 @@ def create_graph(user_id: int, chat_id: int, user_name: str) -> bool:
     user_name = user_name.replace(r"$", r"\$")
     x, y_user, y_avg = zip(*data)
     sns.set_theme(style="ticks")
-    sns.set_context("notebook", font_scale=.9, rc={"grid.linewidth": 1})
+    sns.set_context("paper", font_scale=.7, rc={"grid.linewidth": 1})
     df_user = DataFrame({'x': x, 'y': y_user})
     df_avg = DataFrame({'x': x, 'y': y_avg})
     sns.lineplot(x='x', y='y', data=df_user, label=user_name)

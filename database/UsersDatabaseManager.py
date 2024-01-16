@@ -18,7 +18,7 @@ class UsersDatabaseManager(DatabaseManager):
         SELECT message_id
         FROM created_polls
         WHERE chat_id= ? 
-        ORDER BY CAST(SUBSTR(date, 4, 2) AS INTEGER) DESC , CAST(SUBSTR(date, 1, 2) AS INTEGER) DESC;""",
+        ORDER BY CAST(SUBSTR(date, 7, 2) AS INTEGER) DESC, CAST(SUBSTR(date, 4, 2) AS INTEGER) DESC , CAST(SUBSTR(date, 1, 2) AS INTEGER) DESC;""",
                                    (chat_id, )).fetchone()
 
     def add_poll(self, chat_id: int, poll_id: int, date: str, message_id: int):
@@ -59,8 +59,8 @@ class UsersDatabaseManager(DatabaseManager):
             GROUP BY date
         ) AS avg_mood
         ON user_mood.date = avg_mood.date
-        ORDER BY CAST(SUBSTR(user_mood.date, 4, 2) AS INTEGER), CAST(SUBSTR(user_mood.date, 1, 2) AS INTEGER);""",
-                                   {'user_id': user_id, 'chat_id': chat_id}).fetchall()
+        ORDER BY CAST(SUBSTR(user_mood.date, 7, 2) AS INTEGER), CAST(SUBSTR(user_mood.date, 4, 2) AS INTEGER), CAST(SUBSTR(user_mood.date, 1, 2) AS INTEGER);""",
+                                   {'user_id': user_id, 'chat_id': chat_id}).fetchmany(31)
 
     def is_married(self, user1: int, user2: int, chat_id: int):
         is_first_married = self.cursor.execute('SELECT 1 '
