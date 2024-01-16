@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+from middlewares.gpio import GPIOBlinker
 from middlewares.message_counter import MessageCounter
 from middlewares.message_filter import MessageFilter
 
@@ -14,6 +16,7 @@ storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 dp.middleware.setup(MessageCounter())
 dp.middleware.setup(MessageFilter())
+dp.middleware.setup(GPIOBlinker())
 
 from schedules.poll_creator import *
 scheduler = AsyncIOScheduler()

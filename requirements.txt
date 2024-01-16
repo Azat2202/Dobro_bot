@@ -8,3 +8,4 @@ python-dotenv~=1.0.0
 graphviz~=0.20.1
 seaborn~=0.13.0
 matplotlib~=3.8.1
+gpiozero
