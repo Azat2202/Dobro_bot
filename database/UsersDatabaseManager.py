@@ -59,8 +59,8 @@ class UsersDatabaseManager(DatabaseManager):
             GROUP BY date
         ) AS avg_mood
         ON user_mood.date = avg_mood.date
-        ORDER BY CAST(SUBSTR(user_mood.date, 7, 2) AS INTEGER), CAST(SUBSTR(user_mood.date, 4, 2) AS INTEGER), CAST(SUBSTR(user_mood.date, 1, 2) AS INTEGER);""",
-                                   {'user_id': user_id, 'chat_id': chat_id}).fetchmany(31)
+        ORDER BY CAST(SUBSTR(user_mood.date, 7, 2) AS INTEGER) DESC , CAST(SUBSTR(user_mood.date, 4, 2) AS INTEGER) DESC , CAST(SUBSTR(user_mood.date, 1, 2) AS INTEGER) DESC ;""",
+                                   {'user_id': user_id, 'chat_id': chat_id}).fetchmany(31)[::-1]
 
     def is_married(self, user1: int, user2: int, chat_id: int):
         is_first_married = self.cursor.execute('SELECT 1 '
