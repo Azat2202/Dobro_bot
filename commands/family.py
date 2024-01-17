@@ -51,7 +51,7 @@ def make_graph(nodes, edges, marriages, chat_name, id: str):
         c.edge(str(i), str(j), _attributes={'color': 'black:black', 'constraint': 'false'})
         f.subgraph(c)
     for nod in nodes:
-        if all(nod in sublist for sublist in marriages):
+        if all(nod not in sublist for sublist in marriages):
             f.node(str(nod), label=nod[1], _attributes={'fillcolor': '#99B2DD'})
     for i, j in edges:
         f.edge(i, j, label='')
