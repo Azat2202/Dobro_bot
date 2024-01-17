@@ -14,8 +14,9 @@ from graphviz import Graph
 async def family_repr(message: types.Message):
     with UsersDatabaseManager() as db_worker:
         edges = db_worker.get_edges(message.chat.id)
-        marriages = [[data[1], data[3]] for data in db_worker.get_marriages(message.chat.id)]
+        marriages = [[(data[0], data[1]), (data[2], data[3])] for data in db_worker.get_marriages(message.chat.id)]
         nodes = [item for sublist in marriages for item in sublist] + [item for sublist in edges for item in sublist]
+        # TODO Fix nodes as well so that it would contain id of users as well
         make_graph(nodes, edges, marriages, message.chat.full_name, f"for_{message.from_user.id}")
         with open(os.path.join("..", "graphs", f"for_{message.from_user.id}.png"), 'rb') as inp_f:
             await message.reply_photo(inp_f)
@@ -46,15 +47,17 @@ def make_graph(nodes, edges, marriages, chat_name, id: str):
         c.attr(cluster='true')
         c.attr(peripheries='0')
         c.attr(label="")
-        c.node(i, _attributes={'fillcolor': '#99B2DD' if len(i) % 2 == 0 else '#E9AFA3'})
-        c.node(j, _attributes={'fillcolor': '#E9AFA3' if len(i) % 2 == 0 else '#99B2DD'})
-        c.edge(i, j, _attributes={'color': 'black:black', 'constraint': 'false'})
+        c.node(str(i), label=i[1], _attributes={'fillcolor': '#99B2DD' if len(i) % 2 == 0 else '#E9AFA3'})
+        c.node(str(j), label=j[1], _attributes={'fillcolor': '#E9AFA3' if len(i) % 2 == 0 else '#99B2DD'})
+        c.edge(str(i), str(j), _attributes={'color': 'black:black', 'constraint': 'false'})
         f.subgraph(c)
     for nod in nodes:
-        if all(nod not in sublist for sublist in marriages):
+        if all(nod != sublist[0][1] and nod != sublist[1][1] for sublist in marriages):
             f.node(nod, label=nod, _attributes={'fillcolor': '#99B2DD'})
+            # TODO Fix here id as well
     for i, j in edges:
         f.edge(i, j, label='')
+        # TODO And here as well
     f.render(os.path.join('..', 'graphs', id), format='png', view=False)
 
 
