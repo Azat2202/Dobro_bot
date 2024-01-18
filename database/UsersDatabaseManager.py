@@ -166,12 +166,12 @@ class UsersDatabaseManager(DatabaseManager):
 
     def get_edges(self, chat_id: int):
         return self.cursor.execute("""
-                            SELECT pr_name.name, ch_name.name
+                            SELECT parent.id, parent.name, child.id, child.name
                             FROM children
-                            JOIN users AS pr_name
-                            ON children.chat_id = pr_name.chat_id AND children.parent = pr_name.id
-                            JOIN users AS ch_name
-                                ON children.chat_id = ch_name.chat_id AND children.child = ch_name.id
+                            JOIN users AS parent
+                            ON children.chat_id = parent.chat_id AND children.parent = parent.id
+                            JOIN users AS child
+                                ON children.chat_id = child.chat_id AND children.child = child.id
                             WHERE children.chat_id = :chat_id;""",
                                    {'chat_id': chat_id}).fetchall()
 
