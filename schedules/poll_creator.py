@@ -11,11 +11,13 @@ async def create_poll():
             for data in settings_db_worker.get_mailing_chats():
                 try:
                     created_poll = await bot.send_poll(data[0], question='настроение сегодня',
-                                              options=['+++😇', '++-🥹', '+--🥲', '---😵‍💫'],
-                                              is_anonymous=False)
+                                                       options=['+++😇', '++-🥹', '+--🥲', '---😵‍💫'],
+                                                       is_anonymous=False)
                     last_poll = users_db_worker.get_last_poll(created_poll.chat.id)
-                    users_db_worker.add_poll(created_poll.chat.id, created_poll.poll.id, datetime.now().strftime("%d.%m"),
-                                         created_poll.message_id)
+                    users_db_worker.add_poll(created_poll.chat.id,
+                                             created_poll.poll.id,
+                                             datetime.now().strftime("%d.%m.%y"),
+                                             created_poll.message_id)
                     await bot.pin_chat_message(created_poll.chat.id, created_poll.message_id, disable_notification=True)
                     if last_poll:
                         await bot.stop_poll(created_poll.chat.id, last_poll[0])
