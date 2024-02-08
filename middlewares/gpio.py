@@ -24,7 +24,8 @@ class GPIOBlinker(BaseMiddleware):
         super(GPIOBlinker, self).__init__()
 
     async def on_process_message(self, message: types.Message, data: dict):
-        if not gpio_available: return
+        if not gpio_available:
+            return
         if message.is_command():
             yellow_leds[randint(0, yellow_leds_count - 1)].blink(4, n=1)
         else:
