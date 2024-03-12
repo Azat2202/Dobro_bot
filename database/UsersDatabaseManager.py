@@ -134,10 +134,13 @@ class UsersDatabaseManager(DatabaseManager):
                                    {'parent_id': parent_id, 'child_id': child_id, 'chat_id': chat_id}).fetchone()
 
     def get_parent(self, child_id: int, chat_id: int):
-        return self.cursor.execute("""
+        data =  self.cursor.execute("""
         SELECT parent
         FROM children
         WHERE child = ? AND chat_id = ?""", (child_id, chat_id)).fetchone()
+        if not data:
+            return None
+        return data[0]
 
     def add_child(self, parent: int, child: int, chat_id: int):
         self.cursor.execute("INSERT INTO children (parent, child, chat_id) "
@@ -232,27 +235,45 @@ class UsersDatabaseManager(DatabaseManager):
                             GROUP BY user2;""",
                                    (user1, chat_id, user1, chat_id)).fetchall()
 
-    def get_messages(self, chat_id: int):
+    def get_top_spammers(self, chat_id: int, limit_by:int):
         return self.cursor.execute("SELECT users.name, users.surname, messages.message_count "
                                    "FROM messages "
                                    "JOIN users "
                                    "ON messages.user_id = users.id AND messages.chat_id = users.chat_id "
                                    "WHERE messages.chat_id = (?) "
-                                   "ORDER BY message_count DESC; ",
-                                   (chat_id,)).fetchall()
+                                   "ORDER BY message_count DESC "
+                                   "LIMIT (?); ",
+                                   (chat_id, limit_by)).fetchall()
 
     def get_users(self, chat_id):
         return self.cursor.execute("""
         SELECT id, name, surname FROM users WHERE chat_id = (?)""", (chat_id,)).fetchall()
 
-    def karma_repr(self, chat_id: int):
+    def get_user(self, chat_id, user_id):
+        return self.cursor.execute("""
+               SELECT name, surname, message_count, karma
+               FROM users
+               JOIN messages 
+               ON users.id = messages.user_id AND users.chat_id=messages.chat_id 
+               WHERE users.chat_id = (?) AND users.id=(?)""",
+                                   (chat_id, user_id)).fetchone()
+
+    def update_user(self, chat_id: int, user_id: int, first_name: str, last_name:str):
+        return self.cursor.execute("""
+        UPDATE users
+        SET name = (?), surname = (?)
+        WHERE id = (?) AND chat_id = (?)""",
+                                   (first_name, last_name, user_id, chat_id)).execute()
+
+    def top_karma(self, chat_id: int, limit_by: int):
         return self.cursor.execute("SELECT users.name, users.surname, messages.karma "
                                    "FROM messages "
                                    "JOIN users "
                                    "ON messages.user_id = users.id AND messages.chat_id = users.chat_id "
                                    "WHERE messages.chat_id = (?) "
-                                   "ORDER BY karma DESC; ",
-                                   (chat_id,)).fetchall()
+                                   "ORDER BY karma DESC "
+                                   "LIMIT (?); ",
+                                   (chat_id, limit_by)).fetchall()
 
     def registrate_new_marriage(self, user1_id: int, user1_name: str, user1_surname: str, user2_id: int,
                                 user2_name: str, user2_surname: str, chat_id: int, message_id: int):

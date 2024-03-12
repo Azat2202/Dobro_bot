@@ -1,4 +1,4 @@
-rank_degrees = {
+spam_degrees = {
     50_000: 'главный спамер',
     10_000: 'активный спамер',
     5_000: 'небольшой спамер',
@@ -18,6 +18,24 @@ karma_degrees = {
     100: 'главный добряш',
     1000: 'святой'
 }
+
+
+def get_spammer_rank(count: int):
+    rank = ""
+    for c, r in spam_degrees.items():
+        if count < c:
+            rank = r
+            break
+    return rank
+
+
+def get_karma_rank(karma: int):
+    rank = ""
+    for c, r in karma_degrees.items():
+        if karma < c:
+            rank = r
+            break
+    return rank
 
 
 def format_name(name, surname):

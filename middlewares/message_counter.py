@@ -1,7 +1,7 @@
 from aiogram import types
 from aiogram.dispatcher.middlewares import BaseMiddleware
 from database.UsersDatabaseManager import UsersDatabaseManager
-from utility import rank_degrees
+from utility import spam_degrees
 
 
 class MessageCounter(BaseMiddleware):
@@ -12,7 +12,7 @@ class MessageCounter(BaseMiddleware):
         with UsersDatabaseManager() as db_worker:
             count = db_worker.inc_message(message.from_user.id, message.chat.id, message.from_user.first_name,
                                   message.from_user.last_name)
-            if count in rank_degrees.keys():
+            if count in spam_degrees.keys():
                 await message.reply("🎉🎉Поздравляем!🎉🎉\n"
-                                    f"Теперь вы <b>{rank_degrees.get(count)}!</b>\n"
+                                    f"Теперь вы <b>{spam_degrees.get(count)}!</b>\n"
                                     f"Ваше количество сообщений: {count}")
