@@ -9,9 +9,10 @@ from database.UsersDatabaseManager import UsersDatabaseManager
 from loader import dp, bot
 
 
-@dp.message_handler(commands='help')
+@dp.message_handler(commands="help")
 async def help_(message: types.Message):
-    await message.reply("""
+    await message.reply(
+        """
 Список всех доступных команд:
 /start - инициализация чата
 /help - вывести справку по всем командам
@@ -32,7 +33,7 @@ async def help_(message: types.Message):
 /truth - получить задание правды
 /dare - получить задание действие
 /mark_all - отметить всех участников
-/top_spamers  - топ участников по сообщениям
+/top_spammers  - топ участников по сообщениям
 /top_karma - топ учатников по карме
 Важный вопрос ... - Задать важный вопрос
 Вопрос ... - Задать вопрос да/нет
@@ -40,31 +41,43 @@ async def help_(message: types.Message):
 добряш или плюс или Спасибо - Повысить карму 
 минус или токс - Понизить карму
 Настройки:
-/settings_poll_creation - отправка ежедневных опросов настроения""")
+/settings_poll_creation - отправка ежедневных опросов настроения"""
+    )
 
 
-@dp.message_handler(filters.Text(startswith='Совместимость', ignore_case=True))
+@dp.message_handler(filters.Text(startswith="Совместимость", ignore_case=True))
 async def connection(message: types.Message):
-    await message.reply(f'Ты и {message.text[14::]} вместе с шансом {randint(0, 100)}%')
+    await message.reply(f"Ты и {message.text[14::]} вместе с шансом {randint(0, 100)}%")
 
 
-@dp.message_handler(filters.Text(startswith='Вопрос', ignore_case=True))
+@dp.message_handler(filters.Text(startswith="Вопрос", ignore_case=True))
 async def yn(message: types.Message):
-    await message.reply(choice(['Да', "Нет"]))
+    await message.reply(choice(["Да", "Нет"]))
 
 
-@dp.message_handler(commands='truth')
+@dp.message_handler(commands="truth")
 async def truth(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
-    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'truth_update {message.from_user.id}'),
-                  InlineKeyboardButton('✅', callback_data=f'remove_markup {message.from_user.id}'))
+    inline_kb.add(
+        InlineKeyboardButton(
+            "🔄", callback_data=f"truth_update {message.from_user.id}"
+        ),
+        InlineKeyboardButton(
+            "✅", callback_data=f"remove_markup {message.from_user.id}"
+        ),
+    )
     if by_command:
         await message.reply(get_truth(), reply_markup=inline_kb)
     else:
-        await bot.edit_message_text(get_truth(), message.chat.id, message.message_id, reply_markup=message.reply_markup)
+        await bot.edit_message_text(
+            get_truth(),
+            message.chat.id,
+            message.message_id,
+            reply_markup=message.reply_markup,
+        )
 
 
-@dp.callback_query_handler(lambda c: c.data[:12] == 'truth_update')
+@dp.callback_query_handler(lambda c: c.data[:12] == "truth_update")
 async def marriage_refused(call: types.CallbackQuery):
     if call.from_user.id != int(call.data.split()[1]):
         await call.answer("Вы не можете обновить!")
@@ -73,7 +86,7 @@ async def marriage_refused(call: types.CallbackQuery):
         await call.answer()
 
 
-@dp.callback_query_handler(lambda c: c.data[:13] == 'remove_markup')
+@dp.callback_query_handler(lambda c: c.data[:13] == "remove_markup")
 async def marriage_refused(call: types.CallbackQuery):
     if call.from_user.id != int(call.data.split()[1]):
         await call.answer("Вы не можете подтвердить выбор!")
@@ -82,18 +95,27 @@ async def marriage_refused(call: types.CallbackQuery):
         await call.answer()
 
 
-@dp.message_handler(commands='dare')
+@dp.message_handler(commands="dare")
 async def dare(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
-    inline_kb.add(InlineKeyboardButton('🔄', callback_data=f'dare_update {message.from_user.id}'),
-                  InlineKeyboardButton('✅', callback_data=f'remove_markup {message.from_user.id}'))
+    inline_kb.add(
+        InlineKeyboardButton("🔄", callback_data=f"dare_update {message.from_user.id}"),
+        InlineKeyboardButton(
+            "✅", callback_data=f"remove_markup {message.from_user.id}"
+        ),
+    )
     if by_command:
         await message.reply(get_dare(), reply_markup=inline_kb)
     else:
-        await bot.edit_message_text(get_dare(), message.chat.id, message.message_id, reply_markup=message.reply_markup)
+        await bot.edit_message_text(
+            get_dare(),
+            message.chat.id,
+            message.message_id,
+            reply_markup=message.reply_markup,
+        )
 
 
-@dp.callback_query_handler(lambda c: c.data[:11] == 'dare_update')
+@dp.callback_query_handler(lambda c: c.data[:11] == "dare_update")
 async def marriage_refused(call: types.CallbackQuery):
     if call.from_user.id != int(call.data.split()[1]):
         await call.answer("Вы не можете обновить!")
@@ -102,7 +124,21 @@ async def marriage_refused(call: types.CallbackQuery):
         await call.answer()
 
 
-@dp.message_handler(filters.Text(startswith='Важный вопрос', ignore_case=True))
+@dp.message_handler(filters.Text(startswith="Важный вопрос", ignore_case=True))
 async def yn_important(message: types.Message):
-    await message.reply(choice(['Да', "Нет", "Это не важно", "Успокойся", "Не спрашивай такое", "Да, хотя зря",
-                                "Никогда", "100%", "1 из 100", "Спроси еще раз"]))
+    await message.reply(
+        choice(
+            [
+                "Да",
+                "Нет",
+                "Это не важно",
+                "Успокойся",
+                "Не спрашивай такое",
+                "Да, хотя зря",
+                "Никогда",
+                "100%",
+                "1 из 100",
+                "Спроси еще раз",
+            ]
+        )
+    )

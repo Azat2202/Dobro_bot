@@ -5,6 +5,7 @@ class DatabaseManager:
 
     def __init__(self, db_name):
         import os.path
+
         base_dir = os.path.dirname(os.path.abspath(__file__))
         db_path = os.path.join(base_dir, db_name)
         self.connection = sqlite3.connect(db_path)

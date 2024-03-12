@@ -19,8 +19,9 @@ dp.middleware.setup(MessageFilter())
 dp.middleware.setup(GPIOBlinker())
 
 from schedules.poll_creator import *
+
 scheduler = AsyncIOScheduler()
-scheduler.add_job(create_poll, 'cron', day_of_week='*', hour=19, minute=00, second=0)
+scheduler.add_job(create_poll, "cron", day_of_week="*", hour=19, minute=00, second=0)
 scheduler.start()
 
 # model_name = 'Skoltech/russian-inappropriate-messages'
