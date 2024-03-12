@@ -14,7 +14,9 @@ async def whoami(message: types.Message):
             message.from_user.first_name,
             message.from_user.last_name,
         )
-    await message.reply("Информация о вашем нике обновлена 😎😎!")
+    await message.reply(
+        f"Информация о вашем нике обновлена 😎😎!\nТеперь вы {message.from_user.first_name}"
+    )
 
 
 async def myrights(message: types.Message) -> types.chat_member.ChatMember:

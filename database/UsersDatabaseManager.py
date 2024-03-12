@@ -74,6 +74,17 @@ class UsersDatabaseManager(DatabaseManager):
             {"user_id": user_id, "chat_id": chat_id},
         ).fetchmany(31)[::-1]
 
+    def get_user_avg_mood(self, user_id: int, chat_id:int):
+        return self.cursor.execute(
+            """
+            SELECT (3 - AVG(option_id)) as "mood"
+            FROM poll_answers
+            JOIN created_polls
+                ON poll_answers.poll_id = created_polls.poll_id
+            WHERE chat_id = (?) AND user_id = (?)
+            """, (chat_id, user_id)
+        ).fetchone()
+
     def is_married(self, user1: int, user2: int, chat_id: int):
         is_first_married = self.cursor.execute(
             "SELECT 1 "

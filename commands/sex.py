@@ -70,6 +70,7 @@ async def agreed(call: types.CallbackQuery):
                 f":smiling_face_with_horns::smiling_face_with_horns::smiling_face_with_horns:"
             )
         )
+        await call.answer()
 
 
 @dp.callback_query_handler(lambda c: c.data[:11] == "sex_refusal")

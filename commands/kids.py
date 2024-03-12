@@ -85,6 +85,7 @@ async def adopt_refusal(call: types.CallbackQuery):
             f"{call.from_user.first_name} отказал {call.message.reply_to_message.from_user.first_name} :sad_but_relieved_face:"
         )
     )
+    await call.answer()
 
 
 @dp.callback_query_handler(lambda c: c.data[:15] == "child_agreement")
@@ -130,6 +131,7 @@ async def adopt_agreed(call: types.CallbackQuery):
                 f"{call.from_user.first_name} теперь ребенок {call.message.reply_to_message.from_user.first_name} !"
             )
         )
+        await call.answer()
 
 
 @dp.message_handler(commands=["abandon"])
@@ -172,6 +174,7 @@ async def abandon_agreed(call: types.CallbackQuery):
             return
         db_worker.remove_child(parent_id, child_id, chat_id)
         await call.message.edit_text("Вы отказались от ребенка(")
+        await call.answer()
 
 
 @dp.callback_query_handler(lambda c: c.data[:15] == "abandon_refusal")
@@ -183,6 +186,7 @@ async def abandon_refused(call: types.CallbackQuery):
     await call.message.edit_text(
         f"{call.from_user.first_name} сохранил ребенка в семье!"
     )
+    await call.answer()
 
 
 @dp.message_handler(commands=["escape"])
@@ -217,6 +221,7 @@ async def escape_agreed(call: types.CallbackQuery):
             return
         db_worker.remove_child(parent_id, child_id, chat_id)
         await call.message.edit_text(f"{call.from_user.first_name} убежал от родителей")
+        await call.answer()
 
 
 @dp.callback_query_handler(lambda c: c.data[:14] == "escape_refusal")
@@ -228,3 +233,4 @@ async def escape_refused(call: types.CallbackQuery):
     await call.message.edit_text(
         emoji.emojize(f"{call.from_user.first_name} не убежал от родителей)")
     )
+    call.answer()

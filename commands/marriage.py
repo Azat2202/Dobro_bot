@@ -143,6 +143,7 @@ async def divorce_agreed(call: types.CallbackQuery):
             return
         db_worker.divorce(user_id, chat_id)
         await call.message.edit_text("Вы развелись")
+        await call.answer()
 
 
 @dp.callback_query_handler(lambda c: c.data[:11] == "not_divorce")

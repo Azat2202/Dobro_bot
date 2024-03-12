@@ -35,7 +35,12 @@ async def spammers_repr(message: types.Message):
         name, surname, message_count, karma_count = db_worker.get_user(
             message.chat.id, message.from_user.id
         )
+        avg_user_mood = db_worker.get_user_avg_mood(
+            message.from_user.id, message.chat.id
+        )
+
     out = f"""
+💝{name}💝
 🌟Ваша статистика:🌟
 💼Имя: {name }💼
 📩Вы написали: {message_count} сообщений 📩
@@ -43,4 +48,6 @@ async def spammers_repr(message: types.Message):
 😇У вас {karma_count} кармы 😇
 Уровень кармы: {utility.get_karma_rank(karma_count)}
 """
+    if avg_user_mood[0]:
+        out += f"🥳Ваше среднее настроение: {round(avg_user_mood[0] / 3 * 100)}%🥳\n"
     await bot.send_message(message.chat.id, out)
