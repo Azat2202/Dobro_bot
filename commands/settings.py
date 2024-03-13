@@ -18,3 +18,19 @@ async def settings_poll_creation(message: types.Message):
             )
         else:
             await message.reply("Бот больше не будет отправлять опросы настроения!")
+
+
+@dp.message_handler(commands="settings_updatelog_messages")
+async def settings_poll_creation(message: types.Message):
+    if not (
+        await bot.get_chat_member(message.chat.id, message.from_user.id)
+    ).is_chat_admin():
+        await message.reply("Вы не админ чата!")
+        return
+    with SettingsDatabaseManager() as db_worker:
+        if db_worker.change_updatelog_parameter(message.chat.id):
+            await message.reply("Теперь бот будет оповещать вас о новых обновлениях!")
+        else:
+            await message.reply(
+                "Бот больше не будет оповещать вас о новых обновлениях!"
+            )

@@ -14,7 +14,7 @@ moods_0 = ["😥", "🤐", "😪", "😫", "😒", "😓", "☹️", "😡", "�
 async def create_poll():
     with SettingsDatabaseManager() as settings_db_worker:
         with UsersDatabaseManager() as users_db_worker:
-            for data in settings_db_worker.get_mailing_chats():
+            for data in settings_db_worker.get_chats_with_polls():
                 try:
                     created_poll = await bot.send_poll(
                         data[0],

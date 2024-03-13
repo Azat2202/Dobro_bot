@@ -11,6 +11,7 @@ from middlewares.message_filter import MessageFilter
 
 load_dotenv()
 API_TOKEN = os.getenv("API_TOKEN")
+ADMIN_USERS = list(map(int, os.getenv("ADMIN_USERS").split(",")))
 bot = Bot(token=API_TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
