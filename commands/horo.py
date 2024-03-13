@@ -37,7 +37,7 @@ async def wish(message: types.Message, by_command=True):
         )
 
 
-@dp.callback_query_handler(lambda c: c.data[:11] == "wish_update")
+@dp.callback_query_handler(lambda c: c.data.startswith("wish_update"))
 async def wish_callback_handler(call: types.CallbackQuery):
     if call.from_user.id != int(call.data.split()[1]):
         await call.answer("Вы не можете обновить!")
@@ -71,8 +71,9 @@ async def horo(message: types.Message, by_command=True):
         )
 
 
-@dp.callback_query_handler(lambda c: c.data[:16] == "horo_update")
+@dp.callback_query_handler(lambda c: c.data.startswith("horo_update"))
 async def horo_callback_handler(call: types.CallbackQuery):
+
     if call.from_user.id != int(call.data.split()[1]):
         await call.answer("Вы не можете обновить!")
     else:
