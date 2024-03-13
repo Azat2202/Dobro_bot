@@ -4,13 +4,16 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils import emoji
 
 from database.UsersDatabaseManager import UsersDatabaseManager
-from loader import dp
+from loader import dp, BOT_ID
 
 
 @dp.message_handler(commands=["adopt"])
 async def adopt_command(message: types.Message):
     with UsersDatabaseManager() as db_worker:
         if message.reply_to_message:
+            if message.reply_to_message.from_user.id == BOT_ID:
+                await message.reply("Я уже слишком взрослый чтобы быть ребенком🦓")
+                return
             # В дети нельзя брать себя
             if message.reply_to_message.from_user.id == message.from_user.id:
                 await message.reply("Вы не можете взять в дети себя!")

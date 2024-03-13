@@ -294,6 +294,7 @@ class UsersDatabaseManager(DatabaseManager):
                             ) as t
                             JOIN users as partner
                             ON user2=partner.id AND t.chat_id = partner.chat_id
+                            GROUP BY user2
                             ORDER BY COUNT(user2) DESC;""",
             (user1, chat_id, user1, chat_id),
         ).fetchall()

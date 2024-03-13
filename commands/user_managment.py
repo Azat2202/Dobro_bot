@@ -38,7 +38,7 @@ mute_list = {
 async def mute(message: types.Message):
     if not (
         await bot.get_chat_member(message.chat.id, message.from_user.id)
-    ).is_chat_admin() or (
+    ).is_chat_admin() and not (  # self - ban
         message.reply_to_message
         and message.reply_to_message.from_user.id == message.from_user.id
     ):

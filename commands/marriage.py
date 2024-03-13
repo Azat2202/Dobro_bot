@@ -8,7 +8,7 @@ from aiogram.utils import emoji
 from commands.inlineKeyboards import form_inline_kb
 from database.UsersDatabaseManager import UsersDatabaseManager
 from database.exceptions import *
-from loader import dp
+from loader import dp, BOT_ID
 from utility import format_name, beautiful_time_repr
 
 
@@ -16,6 +16,9 @@ from utility import format_name, beautiful_time_repr
 async def new_marriage(message: types.Message):
     with UsersDatabaseManager() as db_worker:
         if message.reply_to_message:
+            if message.reply_to_message.from_user.id == BOT_ID:
+                await message.reply("Тебе будет трудно со мной в браке...")
+                return
             if db_worker.get_partner(message.from_user.id, message.chat.id):
                 await message.reply("Вы уже состоите в браке!")
                 return
