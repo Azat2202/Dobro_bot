@@ -11,11 +11,11 @@ from loader import dp, bot
 last_time_horo = datetime.datetime.now() - datetime.timedelta(days=1)
 
 
-@dp.message_handler(commands=["horo"])
-async def solo_horo(message: types.Message, by_command=True):
+@dp.message_handler(commands=["wish"])
+async def wish(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
     inline_kb.add(
-        InlineKeyboardButton("🔄", callback_data=f"horo_update {message.from_user.id}"),
+        InlineKeyboardButton("🔄", callback_data=f"wish_update {message.from_user.id}"),
         InlineKeyboardButton(
             "✅", callback_data=f"remove_markup {message.from_user.id}"
         ),
@@ -37,23 +37,20 @@ async def solo_horo(message: types.Message, by_command=True):
         )
 
 
-@dp.callback_query_handler(lambda c: c.data[:11] == "horo_update")
-async def marriage_refused(call: types.CallbackQuery):
+@dp.callback_query_handler(lambda c: c.data[:11] == "wish_update")
+async def wish_callback_handler(call: types.CallbackQuery):
     if call.from_user.id != int(call.data.split()[1]):
         await call.answer("Вы не можете обновить!")
     else:
-        await solo_horo(call.message, False)
+        await wish(call.message, False)
         await call.answer()
 
 
-@dp.message_handler(filters.Text(equals="!Пожелание", ignore_case=True))
-@dp.message_handler(commands=["wish"])
-async def solo_wish(message: types.Message, by_command=True):
+@dp.message_handler(commands=["horo"])
+async def horo(message: types.Message, by_command=True):
     inline_kb = InlineKeyboardMarkup()
     inline_kb.add(
-        InlineKeyboardButton(
-            "🔄", callback_data=f"solo_wish_update {message.from_user.id}"
-        ),
+        InlineKeyboardButton("🔄", callback_data=f"horo_update {message.from_user.id}"),
         InlineKeyboardButton(
             "✅", callback_data=f"remove_markup {message.from_user.id}"
         ),
@@ -74,10 +71,10 @@ async def solo_wish(message: types.Message, by_command=True):
         )
 
 
-@dp.callback_query_handler(lambda c: c.data[:16] == "solo_wish_update")
-async def marriage_refused(call: types.CallbackQuery):
+@dp.callback_query_handler(lambda c: c.data[:16] == "horo_update")
+async def horo_callback_handler(call: types.CallbackQuery):
     if call.from_user.id != int(call.data.split()[1]):
         await call.answer("Вы не можете обновить!")
     else:
-        await solo_wish(call.message, False)
+        await horo(call.message, False)
         await call.answer()
