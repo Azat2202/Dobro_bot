@@ -3,7 +3,7 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.utils import emoji
 
 from database.UsersDatabaseManager import UsersDatabaseManager
-from loader import dp
+from loader import dp, BOT_ID
 
 
 @dp.message_handler(commands=["my_sex"])
@@ -24,6 +24,21 @@ async def sex_repr(message: types.Message):
 @dp.message_handler(commands=["sex"])
 async def new_sex(message: types.Message):
     if message.reply_to_message:
+        if message.reply_to_message.from_user.id == BOT_ID:
+            with UsersDatabaseManager() as db_worker:
+                db_worker.add_sex(
+                    message.from_user.id,
+                    BOT_ID,
+                    message.chat.id,
+                )
+            await message.answer(
+                emoji.emojize(
+                    f"{message.reply_to_message.from_user.first_name} и {message.from_user.first_name} занялись "
+                    f"сексом "
+                    f":smiling_face_with_horns::smiling_face_with_horns::smiling_face_with_horns:"
+                )
+            )
+            return
         if message.reply_to_message.from_user.id == message.from_user.id:
             await message.reply("Вы не можете заняться сексом сами с собой!")
             return
@@ -70,6 +85,7 @@ async def agreed(call: types.CallbackQuery):
                 f":smiling_face_with_horns::smiling_face_with_horns::smiling_face_with_horns:"
             )
         )
+        await call.answer()
 
 
 @dp.callback_query_handler(lambda c: c.data[:11] == "sex_refusal")

@@ -1,8 +1,8 @@
 from . import anek
 from . import horo
 from . import inlineKeyboards
+from . import user_managment
 from . import karma
-from . import mark_all
 from . import marriage
 from . import singleword_commands
 from . import top
@@ -12,9 +12,9 @@ from . import kids
 from . import family
 from . import start
 from . import settings
-from . import user_leave
 from . import poll_handlers
 from . import mood_graphs
+from . import admin
 
 
 from . import regular_message

@@ -6,6 +6,7 @@ from graphviz import Graph
 
 from database.UsersDatabaseManager import UsersDatabaseManager
 from loader import dp
+from utility import emoji_font
 
 
 @dataclass
@@ -38,7 +39,10 @@ async def family_repr(message: types.Message):
         with open(
             os.path.join("..", "graphs", f"for_{message.from_user.id}.png"), "rb"
         ) as inp_f:
-            await message.reply_photo(inp_f)
+            if len(edges) > 20:
+                await message.reply_document(inp_f)
+            else:
+                await message.reply_photo(inp_f)
         os.remove(os.path.join("..", "graphs", f"for_{message.from_user.id}"))
         os.remove(os.path.join("..", "graphs", f"for_{message.from_user.id}.png"))
 
@@ -54,6 +58,7 @@ def make_graph(nodes, edges, marriages, chat_name, id: str):
             "style": "filled,rounded",
             "color": "black",
             "fillcolor": "lightblue2",
+            "fontname": emoji_font,
         },
         graph_attr={"bgcolor": "#EEEEEE"},
     )

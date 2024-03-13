@@ -1,4 +1,6 @@
-rank_degrees = {
+import os
+
+spam_degrees = {
     50_000: "главный спамер",
     10_000: "активный спамер",
     5_000: "небольшой спамер",
@@ -18,6 +20,24 @@ karma_degrees = {
     100: "главный добряш",
     1000: "святой",
 }
+
+
+def get_spammer_rank(count: int):
+    rank = ""
+    for c, r in spam_degrees.items():
+        if count < c:
+            rank = r
+            break
+    return rank
+
+
+def get_karma_rank(karma: int):
+    rank = ""
+    for c, r in karma_degrees.items():
+        if karma < c:
+            rank = r
+            break
+    return rank
 
 
 def format_name(name, surname):
@@ -49,3 +69,8 @@ def beautiful_time_repr(time_):
         else:
             return f"{time_.seconds // 60} минут"
     return f"{time_.seconds} секунд"
+
+
+emoji_font = "NotoEmoji-Medium.ttf"
+font_path = os.path.join(os.path.join(os.getcwd(), "fonts"))
+emoji_font_path = os.path.join(os.path.join(os.getcwd(), "fonts", emoji_font))
