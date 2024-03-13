@@ -14,6 +14,7 @@ from . import start
 from . import settings
 from . import poll_handlers
 from . import mood_graphs
+from . import admin
 
 
 from . import regular_message
