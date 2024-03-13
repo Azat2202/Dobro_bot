@@ -7,6 +7,8 @@ from utility import karma_degrees
 
 
 @dp.message_handler(filters.Text(startswith="добряш", ignore_case=True))
+@dp.message_handler(filters.Text(startswith="умник", ignore_case=True))
+@dp.message_handler(filters.Text(startswith="умница", ignore_case=True))
 @dp.message_handler(filters.Text(startswith="молодец", ignore_case=True))
 @dp.message_handler(filters.Text(startswith="плюс", ignore_case=True))
 @dp.message_handler(filters.Text(startswith="спасибо", ignore_case=True))

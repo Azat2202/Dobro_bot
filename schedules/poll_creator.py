@@ -1,8 +1,14 @@
+import random
 from datetime import datetime
 
 from loader import bot
 from database.SettingsDatabaseManager import SettingsDatabaseManager
 from database.UsersDatabaseManager import UsersDatabaseManager
+
+moods_3 = ["😀", "😁", "😂", "😉", "😆", "😊", "😋", "🥰", "😘", "😍", "☺️"]
+moods_2 = ["😏", "🤯", "🙂", "😮‍💨", "🥹", "🤓", "🙂"]
+moods_1 = ["😑", "🫡", "🫥", "😴", "🥱", "😒", "🫠", "😤", "😟", "😨", "🥴", "🤕"]
+moods_0 = ["😥", "🤐", "😪", "😫", "😒", "😓", "☹️", "😡", "🤬"]
 
 
 async def create_poll():
@@ -13,7 +19,12 @@ async def create_poll():
                     created_poll = await bot.send_poll(
                         data[0],
                         question="настроение сегодня",
-                        options=["+++😇", "++-🥹", "+--🥲", "---😵‍💫"],
+                        options=[
+                            "+++" + random.choice(moods_3),
+                            "++-" + random.choice(moods_2),
+                            "+--" + random.choice(moods_1),
+                            "---" + random.choice(moods_0),
+                        ],
                         is_anonymous=False,
                     )
                     last_poll = users_db_worker.get_last_poll(created_poll.chat.id)

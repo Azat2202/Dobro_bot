@@ -74,7 +74,7 @@ class UsersDatabaseManager(DatabaseManager):
             {"user_id": user_id, "chat_id": chat_id},
         ).fetchmany(31)[::-1]
 
-    def get_user_avg_mood(self, user_id: int, chat_id:int):
+    def get_user_avg_mood(self, user_id: int, chat_id: int):
         return self.cursor.execute(
             """
             SELECT (3 - AVG(option_id)) as "mood"
@@ -82,7 +82,8 @@ class UsersDatabaseManager(DatabaseManager):
             JOIN created_polls
                 ON poll_answers.poll_id = created_polls.poll_id
             WHERE chat_id = (?) AND user_id = (?)
-            """, (chat_id, user_id)
+            """,
+            (chat_id, user_id),
         ).fetchone()
 
     def is_married(self, user1: int, user2: int, chat_id: int):
@@ -293,7 +294,7 @@ class UsersDatabaseManager(DatabaseManager):
                             ) as t
                             JOIN users as partner
                             ON user2=partner.id AND t.chat_id = partner.chat_id
-                            GROUP BY user2;""",
+                            ORDER BY COUNT(user2) DESC;""",
             (user1, chat_id, user1, chat_id),
         ).fetchall()
 

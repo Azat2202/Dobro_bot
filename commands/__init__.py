@@ -3,7 +3,6 @@ from . import horo
 from . import inlineKeyboards
 from . import user_managment
 from . import karma
-from . import mark_all
 from . import marriage
 from . import singleword_commands
 from . import top
