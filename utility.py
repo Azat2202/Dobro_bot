@@ -46,11 +46,11 @@ def format_name(name, surname):
 
 def beautiful_time_repr(time_):
     if time_.days > 365:
-        return f"{time_.days // 365} лет и {time_.days % 365} дней"
+        return f"{time_.days // 365} лет и {beautiful_time_repr(time_.days % 365)}"
     if time_.days > 0:
-        if time_.days == 1:
+        if time_.days % 10 == 1 and time_.days % 100 != 11:
             return f"{time_.days} день"
-        elif 1 < time_.days <= 4:
+        elif time_.days % 10 in range(2, 5) and time_.days % 100 not in range(10, 20):
             return f"{time_.days} дня"
         else:
             return f"{time_.days} дней"
