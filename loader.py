@@ -1,5 +1,6 @@
 import os
 
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -21,6 +22,7 @@ dp = Dispatcher(bot, storage=storage)
 dp.middleware.setup(MessageCounter())
 dp.middleware.setup(MessageFilter())
 dp.middleware.setup(GPIOBlinker())
+dp.middleware.setup(LoggingMiddleware())
 
 from schedules.poll_creator import *
 
