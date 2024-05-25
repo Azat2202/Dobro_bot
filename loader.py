@@ -1,5 +1,6 @@
 import os
 
+from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -8,17 +9,20 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from middlewares.gpio import GPIOBlinker
 from middlewares.message_counter import MessageCounter
 from middlewares.message_filter import MessageFilter
+import logging
 
 load_dotenv()
 API_TOKEN = os.getenv("API_TOKEN")
 ADMIN_USERS = list(map(int, os.getenv("ADMIN_USERS").split(",")))
 BOT_ID = int(os.getenv("BOT_ID"))
+logging.basicConfig(level=logging.INFO)
 bot = Bot(token=API_TOKEN, parse_mode=types.ParseMode.HTML)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 dp.middleware.setup(MessageCounter())
 dp.middleware.setup(MessageFilter())
 dp.middleware.setup(GPIOBlinker())
+dp.middleware.setup(LoggingMiddleware())
 
 from schedules.poll_creator import *
 
