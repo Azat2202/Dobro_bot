@@ -6,15 +6,14 @@ from loader import dp
 from utility import karma_degrees
 
 
-@dp.message_handler(filters.Text(startswith="добряш", ignore_case=True))
-@dp.message_handler(filters.Text(startswith="умник", ignore_case=True))
-@dp.message_handler(filters.Text(startswith="умница", ignore_case=True))
-@dp.message_handler(filters.Text(startswith="молодец", ignore_case=True))
-@dp.message_handler(filters.Text(startswith="плюс", ignore_case=True))
-@dp.message_handler(filters.Text(startswith="спасибо", ignore_case=True))
+@dp.message_handler(filters.Text(equals="добряш", ignore_case=True))
+@dp.message_handler(filters.Text(equals="умник", ignore_case=True))
+@dp.message_handler(filters.Text(equals="умница", ignore_case=True))
+@dp.message_handler(filters.Text(equals="молодец", ignore_case=True))
+@dp.message_handler(filters.Text(equals="плюс", ignore_case=True))
+@dp.message_handler(filters.Text(equals="спасибо", ignore_case=True))
 async def plus_karma(message: types.Message):
     if not message.reply_to_message:
-        await message.reply("Увеличить карму можно ответом на сообщение")
         return
     if message.reply_to_message.from_user.id == message.from_user.id:
         await message.reply("Нельзя изменять карму себе")
@@ -44,7 +43,6 @@ async def plus_karma(message: types.Message):
 @dp.message_handler(filters.Text(equals="токс", ignore_case=True))
 async def minus_karma(message: types.Message):
     if not message.reply_to_message:
-        await message.reply("Уменьшить карму можно ответом на сообщение")
         return
     if message.reply_to_message.from_user.id == message.from_user.id:
         await message.reply("Нельзя изменять карму себе")

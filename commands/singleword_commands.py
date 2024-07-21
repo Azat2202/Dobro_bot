@@ -1,12 +1,23 @@
 from random import randint, choice
 
+import requests
 from aiogram import types
 from aiogram.dispatcher import filters
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from commands.truth_or_dare import get_dare, get_truth
-from database.UsersDatabaseManager import UsersDatabaseManager
 from loader import dp, bot
+
+
+@dp.message_handler(commands="cat")
+async def cat(message: types.Message):
+    resp = requests.get("https://api.thecatapi.com/v1/images/search")
+    cat_json = resp.json()
+    if not cat_json:
+        await message.reply("Произошла ошибка попробуйте еще раз!")
+        return
+    cat_url = cat_json[0].get("url", "")
+    await message.reply_photo(cat_url)
 
 
 @dp.message_handler(commands="help")
@@ -16,6 +27,7 @@ async def help_(message: types.Message):
 Список всех доступных команд:
 /start - инициализация чата
 /help - вывести справку по всем командам
+/cat - отправить картинку кота
 /marry - заключить брак с человеком из чата
 /divorce - развестись
 /marriages - показать текущие браки
