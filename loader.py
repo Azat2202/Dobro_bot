@@ -1,5 +1,6 @@
 import os
 
+import aiohttp
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, types
@@ -13,10 +14,16 @@ import logging
 
 load_dotenv()
 API_TOKEN = os.getenv("API_TOKEN")
+PROXY_URL = os.getenv("PROXY_URL")
+PROXY_USER = os.getenv("PROXY_USER")
+PROXY_PASSWORD = os.getenv("PROXY_PASS")
 ADMIN_USERS = list(map(int, os.getenv("ADMIN_USERS").split(",")))
 BOT_ID = int(os.getenv("BOT_ID"))
+
+
 logging.basicConfig(level=logging.INFO)
-bot = Bot(token=API_TOKEN, parse_mode=types.ParseMode.HTML)
+proxy_auth = aiohttp.BasicAuth(login=PROXY_USER, password=PROXY_PASSWORD)
+bot = Bot(token=API_TOKEN, parse_mode=types.ParseMode.HTML, proxy=PROXY_URL, proxy_auth=proxy_auth)
 storage = MemoryStorage()
 dp = Dispatcher(bot, storage=storage)
 dp.middleware.setup(MessageCounter())
